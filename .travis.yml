@@ -1,9 +1,9 @@
+notifications:
+  slack: mva2017:i2o8L9W91YNCP80Evqbr8uke
+
 language: python
 sudo: required
 fast_finish: true
-
- notifications:
-    slack: mva2017:i2o8L9W91YNCP80Evqbr8uke
 
 matrix:
   include:
