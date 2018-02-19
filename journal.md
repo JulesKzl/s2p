@@ -1,9 +1,13 @@
-# Contexte
+# Project in the [Remote Sensing data](https://mvaisat.wp.imt.fr) course for the MVA master
 
-# Interlocuteur officiel
-Carlo De Franchis <carlodef@gmail.com>
+By Vincent Matthys and [Jules Kozolinsky](mailto:jules.kozolinsky@ens-cachan.fr)
 
-# Objectifs
+## Supervision
+- [Carlo De Franchis](mailto:carlo.de-franchis@ens-cachan.fr)
+- Gabriele Facciolo
+- Enric Meinhardt
+
+# Objectives
 Dans un premier temps, estimer l'angle yaw entre entre 2 images Planet afin de pouvoir reconstruire un nuage de points 3D à partir de ces 2 images. Puis, dans un second temps, avec un nombre multiples d'images, déterminer les paramètres optimaux des rotations des axes de la caméra pour la reconstruction 3D
 
 # TP2
@@ -26,9 +30,13 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
 # To do
 1. Développer l'équation (6) de [1] avec la rotation, optimisation et  implémentation.
 2. L'incorporer à S2P et réussir à reconstruire un nuage de points 3D pour une paire d'image Planet
+    2.1 Launch current s2p with 2 images of Planet
+        2.1.1 Convert RPC models `.txt` into `XML`
+        2.1.1 Test
+2.2 Implement new equation
 3. Extension au bundle adjustment
 
-# Bibliographie
+# Bibliographic References
 [1] C. de Franchis, E. Meinhardt-Llopis, J. Michel, J-M Morel, G. Facciolo. An automatic and modular stereo pipeline for pushbroom images, ISPRS Annals, 2014
 
 [2] H. Schmid. An analytical treatment of the problem of triangulation by stereophotogrammetry. Photogrammetria, 13:67–77, 1 1956.
@@ -41,7 +49,7 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
 
 
 # Installation sur ubuntu 16.04
-```
+```bash
 conda create -n s2p python=3.6
 conda install gdal
 conda install ipykernel
@@ -51,18 +59,22 @@ conda install numpy
 ```
 
 Vérifier que les résultats de :
-```
+```bash
 which pip python
 ```
 tombent bien dans l'environnement s2p créé, puis :
 
-```
+```bash
 pip install utm
 pip install bs4
 ```
 et enfin tester :
-```
+```bash
 python s2p.py testdata/input_pair/config.json
+```
+ou
+```bash
+make test
 ```
 
 
@@ -77,3 +89,37 @@ Et regarder si il faut mettre à jour le path python
 ```
 sys.path.append('/home/vmatthys/anaconda3/envs/s2p/lib/python3.6/site-packages/)
 ```
+
+## Usage for current developpement
+Move into the conda environment
+```bash
+source activate s2p
+```
+
+Install needed packages
+```bash
+conda install ipywidgets rasterio matplotlib #needed for ipytools
+```
+
+Install a jupyter kernel for this environment
+```bash
+python -m ipykernel install --user --name s2p --display-name "s2p"
+```
+
+Run Jupyter
+```bash
+jupyter notebook --notebook-dir=.
+```
+
+Then you can load the notebook, and select the kernel "s2p".
+
+## What is the Satellite Stereo Pipeline ?
+> Note : With doublets only for now
+
+### Input:
+All the needed information is in a `config.json` file which contains:
++ 2 images with `.tif` extension
+The TIFF (for [Tagged Image File Format](https://fr.wikipedia.org/wiki/Tagged_Image_File_Format)) file format can handle images and data within a single file.
++ 2 RPC models represented through an `XML` tree.
++ the description of the roi (region of interest)
++
