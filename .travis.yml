@@ -17,11 +17,11 @@ matrix:
       python: 3.6
       env: CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal
     - os: osx
-      python: 2.7
+      language: generic
       env: PATH=/Library/Frameworks/GDAL.framework/Versions/2.1/unix/bin:$PATH
-    - os: osx
-      python: 3.6
-      env: PATH=/Library/Frameworks/GDAL.framework/Versions/2.1/unix/bin:$PATH
+    # - os: osx
+    #   python: 3.6
+    #   env: PATH=/Library/Frameworks/GDAL.framework/Versions/2.1/unix/bin:$PATH
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo rm -vf /etc/apt/sources.list.d/*riak*; fi
