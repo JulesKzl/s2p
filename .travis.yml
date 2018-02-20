@@ -8,14 +8,14 @@ fast_finish: true
 
 matrix:
   include:
-    - os: linux
-      dist: trusty
-      python: 2.7
-      env: CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal
-    - os: linux
-      dist: trusty
-      python: 3.6
-      env: CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal
+    # - os: linux
+    #   dist: trusty
+    #   python: 2.7
+    #   env: CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal
+    # - os: linux
+    #   dist: trusty
+    #   python: 3.6
+    #   env: CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal
     - os: osx
       language: generic
       env: PATH=/Library/Frameworks/GDAL.framework/Versions/2.1/unix/bin:$PATH
@@ -39,6 +39,8 @@ install:
 
 script:
   - make
+  - which python
+  - pip2 -V
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip2 list; pip2 show requests; fi
   - make test
 #  ImportError: No module named requests
