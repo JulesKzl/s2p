@@ -17,11 +17,17 @@ matrix:
       python: 3.6
       env: CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal
     - os: osx
-      language: generic
+      language: python
+      python: 2.7
+      # virtualenv:
+      #   system_site_packages: true
       env: PATH=/Library/Frameworks/GDAL.framework/Versions/2.1/unix/bin:$PATH
-    # - os: osx
-    #   python: 3.6
-    #   env: PATH=/Library/Frameworks/GDAL.framework/Versions/2.1/unix/bin:$PATH
+    - os: osx
+      language: python
+      python: 3.6
+      # virtualenv:
+      #   system_site_packages: true
+      env: PATH=/Library/Frameworks/GDAL.framework/Versions/2.1/unix/bin:$PATH
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo rm -vf /etc/apt/sources.list.d/*riak*; fi
@@ -31,6 +37,8 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; brew unlink gdal; brew install gcc; brew link --overwrite gcc; brew install geographiclib fftw; fi
 
 install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip -V; pip2 -V; pip3 -V; which -a python; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip -V; pip2 -V; pip3 -V; which -a python; which python2.7; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip2 install numpy utm bs4 requests; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip install numpy utm bs4 requests; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip install GDAL==$(gdal-config --version | awk -F'[.]' '{print $1"."$2}'); fi
@@ -39,7 +47,5 @@ install:
 
 script:
   - make
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip -V; pip2 -V; pip3 -V; which -a python; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip2 -V; which -a python; which python2.7; fi
   - make test
 #  ImportError: No module named requests
