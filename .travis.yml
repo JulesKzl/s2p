@@ -39,5 +39,6 @@ install:
 
 script:
   - make
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip2 list; pip2 show requests; fi
   - make test
 #  ImportError: No module named requests
