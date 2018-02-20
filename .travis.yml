@@ -39,8 +39,9 @@ install:
 
 script:
   - make
-  - which python
+  - which -a python
   - pip2 -V
+  - which python2.7
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip2 list; pip2 show requests; fi
   - make test
 #  ImportError: No module named requests
