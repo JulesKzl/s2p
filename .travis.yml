@@ -28,7 +28,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; brew unlink gdal; brew install gcc; brew link --overwrite gcc; brew install geographiclib fftw; fi
 
 install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo unlink /usr/bin/python; sudo ln -s /usr/local/bin/python2.7 /usr/bin/python; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then echo 'alias python='python2.7' >>~/.bash_profile; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip2 install numpy utm bs4 requests; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip install numpy utm bs4 requests; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip install GDAL==$(gdal-config --version | awk -F'[.]' '{print $1"."$2}'); fi
