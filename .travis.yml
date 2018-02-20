@@ -29,7 +29,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo python /Users/travis/build/JulesKzl/s2p/3rdparty/get-pip.py ;fi
 
 install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip install numpy --upgrade; sudo pip install utm bs4 requests; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo pip install --ignore-installed numpy --upgrade; sudo pip install utm bs4 requests; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip install numpy utm bs4 requests; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip install GDAL==$(gdal-config --version | awk -F'[.]' '{print $1"."$2}'); fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget http://www.kyngchaos.com/files/software/frameworks/GDAL_Complete-2.1.dmg; fi
