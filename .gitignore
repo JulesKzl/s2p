@@ -25,5 +25,5 @@ iterate.dat
 testoutput
 .idea
 
-yaw_extension/.ipynd_checkpoints/*
+yaw_extension/.ipynb_checkpoints/*
 *__pycache___
