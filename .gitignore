@@ -17,10 +17,13 @@ c/sift/sift_roi
 c/sift/matching
 c/homography/homography
 
-.DS_Store
+*.DS_Store
 ipynb
 
 iterate.dat
 
 testoutput
 .idea
+
+*.ipynd_checkpoints
+*__pycache___
