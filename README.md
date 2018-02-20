@@ -1,6 +1,8 @@
 # S2P - Satellite Stereo Pipeline
+> Note : this fork was created in order to adapt s2p to Planet's doublets and triplets
+For more informations, read journal.md
 
-[![Build Status](https://travis-ci.org/MISS3D/s2p.svg?branch=master)](https://travis-ci.org/MISS3D/s2p)
+[![Build Status](https://travis-ci.org/JulesKzl/s2p.svg?branch=master)](https://travis-ci.org/JulesKzl/s2p)
 
 This software implements a stereo pipeline which produces elevation models from
 images taken by high resolution optical satellites such as Pléiades, WorldView,
@@ -8,10 +10,10 @@ QuickBird, Spot or Ikonos. It generates 3D point clouds and digital surface
 models from stereo pairs (two images) or tri-stereo sets (three images) in a
 completely automatic fashion.
 
-S2P was used to win the 2016 [IARPA Multi-View Stereo 3D Mapping Challenge](https://www.iarpa.gov/challenges/3dchallenge.html). 
+S2P was used to win the 2016 [IARPA Multi-View Stereo 3D Mapping Challenge](https://www.iarpa.gov/challenges/3dchallenge.html).
 
-A wide variety of stereo correlation algorithms are supported, including several 
-flavors of semi-global matching (SGM), TV-L1 optical flow, etc. 
+A wide variety of stereo correlation algorithms are supported, including several
+flavors of semi-global matching (SGM), TV-L1 optical flow, etc.
 
 The main language is Python, although several operations are handled by
 binaries written in C.
@@ -20,14 +22,6 @@ The pipeline is implemented in the file `s2p.py`. The `s2p` module can be used
 to produce surface models and 3D point clouds from arbitrarily large regions
 of interest or from complete images. If needed, it cuts the region of interest
 in several small tiles and process them in parallel.
-
-
-## Docker image
-[![Docker Status](http://dockeri.co/image/carlodef/s2p)](https://hub.docker.com/r/carlodef/s2p/)
-
-A precompiled docker image is available and ready to use:
-
-    docker pull carlodef/s2p
 
 
 ## Usage
