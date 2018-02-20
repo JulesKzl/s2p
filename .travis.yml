@@ -40,3 +40,4 @@ install:
 script:
   - make
   - make test
+#  ImportError: No module named requests
