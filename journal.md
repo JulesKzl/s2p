@@ -30,11 +30,11 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
 # To do
 1. Développer l'équation (6) de [1] avec la rotation, optimisation et  implémentation.
 2. L'incorporer à S2P et réussir à reconstruire un nuage de points 3D pour une paire d'image Planet
-    2.1 Launch current s2p with 2 images of Planet
-        2.1.1 Convert RPC models `.txt` into `XML`
-        2.1.1 Test
-2.2 Implement new equation
-3. Extension au bundle adjustment
+    1. Try to understand the way tile is divided
+    2. Launch current s2p with 2 images of Planet = modify `config.json` file
+        1. Convert Plant's RPC models from `.txt` to `XML`
+    3. Implement new equation
+3. Extend to bundle adjustment
 
 # Bibliographic References
 [1] C. de Franchis, E. Meinhardt-Llopis, J. Michel, J-M Morel, G. Facciolo. An automatic and modular stereo pipeline for pushbroom images, ISPRS Annals, 2014
@@ -114,6 +114,7 @@ jupyter notebook --notebook-dir=.
 Then you can load the notebook, and select the kernel "s2p".
 
 ## What is the Satellite Stereo Pipeline ?
+
 > Note : With doublets only for now
 
 ### Input:
@@ -123,3 +124,31 @@ The TIFF (for [Tagged Image File Format](https://fr.wikipedia.org/wiki/Tagged_Im
 + 2 RPC models represented through an `XML` tree.
 + the description of the roi (region of interest)
 +
+
+## Pipeline
+
+### 1. Initialisatize and divide into tiles
+<!-- ('initialisation', False), -->
+### 2. Correct the pointing error
+<!-- ('local-pointing', True),
+('global-pointing', False), -->
+Locally (using tiles_pairs) or globally.
+
+### 3. Stereo rectification 
+<!-- ('rectification', True), -->
+Stereo rectification (or epipolar resampling) consists of resample a pair of images such that the epipolar lines become horizontal and aligned.
+
+### 4. Stereo Matching
+<!-- ('matching', True), -->
+Compute the disparity of a pair of images.
+
+
+### 5. Triangulation
+(We suppose that we have only 2 images for now)
+if triangulation_mode = geometric then multidisparities_to_ply
+if triangulation_mode = pairwise then disparity_to_ply
+
+### 6. DSM Rasterization
+???
+
+### Output:
