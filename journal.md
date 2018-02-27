@@ -175,3 +175,8 @@ We are provided with two different types of images:
 - **Pansharpened images**: 1-band Panchromatic DN Image (Pan) [Pansharpening](http://www.asprs.org/a/publications/proceedings/sandiego2010/sandiego10/Padwick.pdf) is a process of merging high-resolution panchromatic and lower resolution multispectral imagery to create a single high-resolution color image.
 
 Imagery data is accompanied by Rational Polynomial Coe cients (RPCs) to enable orthorectication by the user. RPC are encoded into `.txt` files. (Only inverse model ?)
+
+## Correction of pointing error
+> From [[1]]([1] C. de Franchis, E. Meinhardt-Llopis, J. Michel, J-M Morel, G. Facciolo. An automatic and modular stereo pipeline for pushbroom images, ISPRS Annals, 2014)
+
+A simple way to correct the relative pointing error is thus to trans- form one of the two images, in such a way that the corresponding points fall on the respective epipolar curves: given two images $u$, $v$ and a set of correspondences ($x_i$ , x′i )i=1...N , we search for a translation T such that, for all i, the transformed point Tx′i lies
