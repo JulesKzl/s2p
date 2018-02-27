@@ -27,3 +27,9 @@ testoutput
 
 yaw_extension/.ipynb_checkpoints/*
 yaw_extension/output/*
+yaw_extension/pointing_error_correction/*.aux
+yaw_extension/pointing_error_correction/*.out
+yaw_extension/pointing_error_correction/*.bbl
+yaw_extension/pointing_error_correction/*.blg
+yaw_extension/pointing_error_correction/*.log
+yaw_extension/pointing_error_correction/*.synctex.gz
