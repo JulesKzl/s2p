@@ -10,7 +10,8 @@ Vincent Matthys and [Jules Kozolinsky](mailto:jules.kozolinsky@ens-cachan.fr)
 - Enric Meinhardt
 
 ## Objectives
-The optical S2P [1] was developed for high resolution pushbroom satellites such as Pleiades or WorldView. One of the particularities of these satellites is that the attitude of the satellite is known with high accuracy (about 50 μrad for Pleiades for instance). This implies that the pointing error in the yaw axis is locally zero, and that roll and pitch can be corrected by a translations in image space [2,3]. For satellites such as SkySat from Planet this pointing error is larger [4], which implies that the yaw error cannot be neglected anymore. The objective of this project is to extend the S2P 3D reconstruction pipeline to handle spaceborne frame cameras such as Planet Doves and SkySat.
+The optical S2P [1] was developed for high resolution pushbroom satellites such as Pleiades or WorldView. One of the particularities of these satellites is that the attitude of the satellite is known with high accuracy (about 50 μrad for Pleiades for instance). This implies that the pointing error in the yaw axis is locally zero, and that roll and pitch can be corrected by a translations in image space [2,3]. For satellites such as SkySat from Planet this pointing error is larger [4], which implies that the yaw error cannot be neglected anymore.
+The objective of this project is to extend the S2P 3D reconstruction pipeline to handle spaceborne frame cameras such as Planet Doves and SkySat.
 
 Dans un premier temps, estimer l'angle yaw entre entre 2 images Planet afin de pouvoir reconstruire un nuage de points 3D à partir de ces 2 images. (Espace image)
 Puis, dans un second temps, avec un nombre multiples d'images, déterminer les paramètres optimaux des rotations des axes de la caméra pour la reconstruction 3D. (Espace objet)
@@ -36,10 +37,12 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
 1. Développer l'équation (6) de [1] avec la rotation, optimisation et  implémentation.
 2. L'incorporer à S2P et réussir à reconstruire un nuage de points 3D pour une paire d'image Planet
     1. Understand the data we get from Planet (cf `understand_s2p.py`)
-        - Panchromatic or pansharp images
+        - Panchromatic or pansharp images, different cameras
     1. Try to understand the way tiles are divided from the roi
-    2. Launch current s2p with 2 images of Planet = modify `config.json` file
-        1. Convert Plant's RPC models from `.txt` to `XML`
+    2. Launch current s2p with 2 images of Planet = adapt `config.json` file
+        - size of tile ?
+        - utm box ?
+
     3. Implement new equation
 3. Extend to bundle adjustment
 
@@ -113,6 +116,11 @@ Install a jupyter kernel for this environment
 python -m ipykernel install --user --name s2p --display-name "s2p"
 ```
 
+Run the pipeline
+```bash
+python3 s2p.py yaw_extension/config.json
+```
+
 Run Jupyter
 ```bash
 jupyter notebook --notebook-dir=.
@@ -163,7 +171,7 @@ if triangulation_mode = pairwise then disparity_to_ply
 All images are in `.tif` format. The [Tagged Image File Format](https://fr.wikipedia.org/wiki/Tagged_Image_File_Format) (TIFF) can handle images and data within a single file.
 
 We are provided with two different types of images:
-- **Panchromatic images**: four bands (B, G, R, NIR)
-- **Pansharpened images**: [Pansharpening](http://www.asprs.org/a/publications/proceedings/sandiego2010/sandiego10/Padwick.pdf) is a process of merging high-resolution panchromatic and lower resolution multispectral imagery to create a single high-resolution color image.
+- **Panchromatic images**: 4-band Analytic DN Image (Blue, Green, Red, NIR)
+- **Pansharpened images**: 1-band Panchromatic DN Image (Pan) [Pansharpening](http://www.asprs.org/a/publications/proceedings/sandiego2010/sandiego10/Padwick.pdf) is a process of merging high-resolution panchromatic and lower resolution multispectral imagery to create a single high-resolution color image.
 
-RPC Models are encoded into `.txt` files.
+Imagery data is accompanied by Rational Polynomial Coe cients (RPCs) to enable orthorectication by the user. RPC are encoded into `.txt` files. (Only inverse model ?)
