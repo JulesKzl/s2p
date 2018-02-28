@@ -37,10 +37,8 @@
    \label{angles}
 \end{figure}
 
-\section{Satellite attitude instability effects on stereo images}
+\section{Satellite attitude error effects on stereo images}
 \label{sec:sensibility}
-\cite{1326585}
-TODO Get full text
 
 \section{Correction of Relative Pointing Error}
 \cite{de2014automatic}\\
@@ -67,7 +65,7 @@ Because of sensitivity issues, we can take only roll and pitch error into accoun
 \begin{align*}
 f(\textbf{x}) = T\textbf{x}
 \end{align*}
-\textit{i.e.} $f$ is a translation.\\
+where $T$ is a translation.\\
 Here the error $e$ is invariant to any horizontal translation, thus the search for a translation minimizing the relative pointing error of formula (\ref{minif}) can be restricted to vertical translations only. With a vertical translation of parameter $t$, the error becomes
 \begin{align*}
 \dfrac{1}{N} \sum\limits_{i=1}^{N} d(T\textbf{x}'_i, F\textbf{x}_i) = \dfrac{1}{N} \sum\limits_{i=1}^{N} | y'_i + t+ c_i|
@@ -75,6 +73,11 @@ Here the error $e$ is invariant to any horizontal translation, thus the search f
 The translation that minimizes this sum is given by the geometric median (Weiszfeld, 1937) of the vector $(-y'_i - c_i )_{i=1...N}$.  The relative pointing error can thus be minimized in a tile by applying a translation to one of the images. Note that the median is robust against outliers, thus this correction procedure works well even in the presence of false matches.
 
 \subsection{Roll, Pitch and Yaw Angles}
+If we assume that the scene is located at infinity with respect to the satellite, an error in the sensor attitude measurement can be modeled in image space as a translation composed with a rotation. Therefore we have
+\begin{align*}
+f(\textbf{x}) = RT\textbf{x}
+\end{align*}
+where $R$ is a rotation and $T$ a translation.\\
 
 \bibliographystyle{plain}
 \bibliography{biblio}
