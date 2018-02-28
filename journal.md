@@ -51,7 +51,7 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
   a = np.divide(n, d)
   return np.vstack((np.multiply(a, l[:, 0]), np.multiply(a, l[:, 1]))).T
   ```
-  Why no square root ? Why `e = [a l_0, a l_1]` ?
+  Projection of xx on l ? 
 
 4. Implement correction of pointing error with the rotation
 5. Extend: image space --> object space (bundle adjustment)
