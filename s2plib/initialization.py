@@ -127,7 +127,7 @@ def build_cfg(user_cfg):
     y = cfg['roi']['y']
     w = cfg['roi']['w']
     h = cfg['roi']['h']
-    
+
     cfg['roi'] = {'x': x, 'y': y, 'w': w, 'h': h}
 
     # if srtm is disabled set disparity range method to sift
@@ -136,7 +136,11 @@ def build_cfg(user_cfg):
 
     # get utm zone
     if 'utm_zone' not in cfg or cfg['utm_zone'] is None:
-        cfg['utm_zone'] = rpc_utils.utm_zone(cfg['images'][0]['rpc'], x, y, w, h)
+        cfg['utm_zone'] = rpc_utils.utm_zone(cfg['images'][0]['rpc'],
+                                             x,
+                                             y,
+                                             w,
+                                             h)
 
 
 def make_dirs():
@@ -185,8 +189,8 @@ def adjust_tile_size():
     if n == 2:
         print('total number of tiles: {} ({} x {})'.format(ntx * nty, ntx, nty))
     else:
-        print('total number of tiles: {} ({} x {}) x {} pairs'.format(ntx*nty*(n-1),
-                                                                      ntx, nty, n-1))
+        print('total number of tiles: {} ({} x {}) x {}\
+        pairs'.format(ntx*nty*(n-1), ntx, nty, n-1))
     return tile_w, tile_h
 
 
@@ -239,10 +243,8 @@ def create_tile(coords, neighborhood_coords_dict):
     elif key in neighborhood_coords_dict:
         for coords2 in neighborhood_coords_dict[key]:
             x2, y2, w2, h2 = coords2
-            tile['neighborhood_dirs'].append(os.path.join('../../..', get_tile_dir(x2,
-                                                                                   y2,
-                                                                                   w2,
-                                                                                   h2)))
+            tile['neighborhood_dirs']\
+            .append(os.path.join('../../..', get_tile_dir(x2, y2, w2, h2)))
 
     tile_json = os.path.join(get_tile_dir(x,y,w,h),'config.json')
     tile['json'] = tile_json
@@ -272,7 +274,12 @@ def tiles_full_info(tw, th, tiles_txt, create_masks=False):
     # build a tile dictionary for all non-masked tiles and store them in a list
     tiles = []
     # list tiles coordinates
-    tiles_coords, neighborhood_coords_dict = compute_tiles_coordinates(rx, ry, rw, rh, tw, th)
+    tiles_coords, neighborhood_coords_dict = compute_tiles_coordinates(rx,
+                                                                       ry,
+                                                                       rw,
+                                                                       rh,
+                                                                       tw,
+                                                                       th)
 
     if os.path.exists(tiles_txt) is False or create_masks is True:
         print('\ndiscarding masked tiles...')
