@@ -35,6 +35,19 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
 
 ## To do
 1. Développer l'équation (6) de [1] avec la rotation, optimisation et  implémentation.
+    For now, local pointing error is implemented as follow:
+    ```python3
+    # epipolar lines: 2D array of size Nx3, one epipolar line per row
+    l = np.dot(x, F.T)
+
+    # compute the error vectors (projection of xx on l)
+    n = np.multiply(xx[:, 0], l[:, 0]) + np.multiply(xx[:, 1], l[:, 1]) + l[:, 2]
+
+    d = np.square(l[:, 0]) + np.square(l[:, 1])
+    a = np.divide(n, d)
+    return np.vstack((np.multiply(a, l[:, 0]), np.multiply(a, l[:, 1]))).T
+    ```
+    Why no square root ? Why [a l_0, a l_1] ?
 2. L'incorporer à S2P et réussir à reconstruire un nuage de points 3D pour une paire d'image Planet
     1. Understand the data we get from Planet (cf `understand_s2p.py`)
         - Panchromatic or pansharp images, different cameras
@@ -42,8 +55,8 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
     2. Launch current s2p with 2 images of Planet = adapt `config.json` file
         - size of tile ?
         - utm box ?
-
-    3. Implement new equation
+    3. Display figure which shows the displacements that should be applied to the matching points of the second image to make them fit on the corresponding epipolar curves.
+    4. Implement new equation
 3. Extend to bundle adjustment
 
 ## Bibliographic References
@@ -177,6 +190,4 @@ We are provided with two different types of images:
 Imagery data is accompanied by Rational Polynomial Coe cients (RPCs) to enable orthorectication by the user. RPC are encoded into `.txt` files. (Only inverse model ?)
 
 ## Correction of pointing error
-> From [[1]]([1] C. de Franchis, E. Meinhardt-Llopis, J. Michel, J-M Morel, G. Facciolo. An automatic and modular stereo pipeline for pushbroom images, ISPRS Annals, 2014)
-
-A simple way to correct the relative pointing error is thus to trans- form one of the two images, in such a way that the corresponding points fall on the respective epipolar curves: given two images $u$, $v$ and a set of correspondences ($x_i$ , x′i )i=1...N , we search for a translation T such that, for all i, the transformed point Tx′i lies
+See [point_error_correction.pdf](./yaw_extension/point_error_correction/point_error_correction.pdf)
