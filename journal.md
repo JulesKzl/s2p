@@ -191,4 +191,4 @@ We are provided with two different types of images:
 Imagery data is accompanied by Rational Polynomial Coe cients (RPCs) to enable orthorectication by the user. RPC are encoded into `.txt` files. (Only inverse model ?)
 
 ## Correction of pointing error
-See [point_error_correction.pdf](./yaw_extension/point_error_correction/point_error_correction.pdf)
+See [point_error_correction.pdf](https://github.com/JulesKzl/s2p/blob/master/yaw_extension/pointing_error_correction/pointing_error_correction.pdf)
