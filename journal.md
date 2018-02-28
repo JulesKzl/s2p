@@ -34,30 +34,26 @@ Dans le cas général (Multi-view sterovision), on doit estimer la position, les
 Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minimiser l'erreur de reconstruction sur l'ensemble des images.
 
 ## To do
-1. Développer l'équation (6) de [1] avec la rotation, optimisation et  implémentation.
-    For now, local pointing error is implemented as follow:
-    ```python3
-    # epipolar lines: 2D array of size Nx3, one epipolar line per row
-    l = np.dot(x, F.T)
 
-    # compute the error vectors (projection of xx on l)
-    n = np.multiply(xx[:, 0], l[:, 0]) + np.multiply(xx[:, 1], l[:, 1]) + l[:, 2]
+1. Compute epipolar error to find size of tiles
+  Check if tile 1000x1000 still induces low error with Planet's images
+2. Display figure which shows the displacements that should be applied to the matching points of the second image to make them fit on the corresponding epipolar curves.
+3. Understand current implementation of pointing error
 
-    d = np.square(l[:, 0]) + np.square(l[:, 1])
-    a = np.divide(n, d)
-    return np.vstack((np.multiply(a, l[:, 0]), np.multiply(a, l[:, 1]))).T
-    ```
-    Why no square root ? Why [a l_0, a l_1] ?
-2. L'incorporer à S2P et réussir à reconstruire un nuage de points 3D pour une paire d'image Planet
-    1. Understand the data we get from Planet (cf `understand_s2p.py`)
-        - Panchromatic or pansharp images, different cameras
-    1. Try to understand the way tiles are divided from the roi
-    2. Launch current s2p with 2 images of Planet = adapt `config.json` file
-        - size of tile ?
-        - utm box ?
-    3. Display figure which shows the displacements that should be applied to the matching points of the second image to make them fit on the corresponding epipolar curves.
-    4. Implement new equation
-3. Extend to bundle adjustment
+  ```python3
+  # epipolar lines: 2D array of size Nx3, one epipolar line per row
+  l = np.dot(x, F.T)
+
+  # compute the error vectors (projection of xx on l)
+  n = np.multiply(xx[:, 0], l[:, 0]) + np.multiply(xx[:, 1], l[:, 1]) + l[:, 2]
+
+  d = np.square(l[:, 0]) + np.square(l[:, 1])
+  a = np.divide(n, d)
+  return np.vstack((np.multiply(a, l[:, 0]), np.multiply(a, l[:, 1]))).T
+  ```
+  Why no square root ? Why `e = [a l_0, a l_1]` ?
+4. Implement correction of pointing error with the rotation
+5. Extend: image space --> object space (bundle adjustment)
 
 ## Bibliographic References
 [1] C. de Franchis, E. Meinhardt-Llopis, J. Michel, J-M Morel, G. Facciolo. An automatic and modular stereo pipeline for pushbroom images, ISPRS Annals, 2014
@@ -155,6 +151,10 @@ All the needed information is in a `config.json` file which contains:
 
 #### 1. Initialisatize and divide into tiles
 <!-- ('initialisation', False), -->
+(cf Section 3.4 in [1])
+The epipolar error should be computed as a preliminary step, and the optimal tile size selected accordingly.
+
+
 #### 2. Correct the pointing error
 <!-- ('local-pointing', True),
 ('global-pointing', False), -->
