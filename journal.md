@@ -35,7 +35,7 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
 
 ## To do
 1. Développer l'équation (6) de [1] avec la rotation, optimisation et  implémentation.
-    For now, local pointing error is implemented as follow: 
+    For now, local pointing error is implemented as follow:
     ```python3
     # epipolar lines: 2D array of size Nx3, one epipolar line per row
     l = np.dot(x, F.T)
@@ -55,8 +55,8 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
     2. Launch current s2p with 2 images of Planet = adapt `config.json` file
         - size of tile ?
         - utm box ?
-
-    3. Implement new equation
+    3. Display figure which shows the displacements that should be applied to the matching points of the second image to make them fit on the corresponding epipolar curves.
+    4. Implement new equation
 3. Extend to bundle adjustment
 
 ## Bibliographic References
