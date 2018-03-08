@@ -68,7 +68,7 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
 [5] J. Sánchez. The Inverse Compositional Algorithm for Parametric Registration, IPOL, 6, 2016
 
 
-## Installation sur ubuntu 16.04
+## Installation for Ubuntu 16.044
 ```bash
 conda create -n s2p python=3.6
 conda install gdal
@@ -78,21 +78,21 @@ conda install requests
 conda install numpy
 ```
 
-Vérifier que les résultats de :
+Check that results for:
 ```bash
 which pip python
 ```
-tombent bien dans l'environnement s2p créé, puis :
+cleary indicate the path to the s2p environment just created. Then install with pip the last 2 packages needed:
 
 ```bash
 pip install utm
 pip install bs4
 ```
-et enfin tester :
+You are done. Test with:
 ```bash
 python s2p.py testdata/input_pair/config.json
 ```
-ou
+and compile sources using:
 ```bash
 make test
 ```
@@ -102,12 +102,12 @@ make test
 
 Ajouter dans le fichier de configuration du shell `.zshrc` :
 ```
-export LD_LIBRARY_PATH=/home/vmatthys/anaconda3/lib/${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export LD_LIBRARY_PATH=/home/XXX/anaconda3/lib/${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 ```
 
 Et regarder si il faut mettre à jour le path python
 ```
-sys.path.append('/home/vmatthys/anaconda3/envs/s2p/lib/python3.6/site-packages/)
+sys.path.append('/home/XXXs/anaconda3/envs/s2p/lib/python3.6/site-packages/)
 ```
 
 ## Usage for current developpement
