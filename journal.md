@@ -51,7 +51,7 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
   a = np.divide(n, d)
   return np.vstack((np.multiply(a, l[:, 0]), np.multiply(a, l[:, 1]))).T
   ```
-  Projection of xx on l ? 
+  Projection of xx on l ?
 
 4. Implement correction of pointing error with the rotation
 5. Extend: image space --> object space (bundle adjustment)
@@ -188,7 +188,9 @@ We are provided with two different types of images:
 - **Panchromatic images**: 4-band Analytic DN Image (Blue, Green, Red, NIR)
 - **Pansharpened images**: 1-band Panchromatic DN Image (Pan) [Pansharpening](http://www.asprs.org/a/publications/proceedings/sandiego2010/sandiego10/Padwick.pdf) is a process of merging high-resolution panchromatic and lower resolution multispectral imagery to create a single high-resolution color image.
 
-Imagery data is accompanied by Rational Polynomial Coe cients (RPCs) to enable orthorectication by the user. RPC are encoded into `.txt` files. (Only inverse model ?)
+% Panchromatic noir et blanc
+
+Imagery data is accompanied by Rational Polynomial Coe cients (RPCs) to enable orthorectication by the user. RPC are encoded into `.txt` files. (Projection only)
 
 ## Correction of pointing error
 See [point_error_correction.pdf](https://github.com/JulesKzl/s2p/blob/master/yaw_extension/pointing_error_correction/pointing_error_correction.pdf)
