@@ -2,18 +2,18 @@
   "out_dir": "./output",
   "images": [
     {
-      "img": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d1_0001.tif",
-      "rpc": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d1_0001_rpc.txt"
+      "img": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d2_0010.tif",
+      "rpc": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d2_0010_rpc.txt"
     },
     {
-      "img": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d1_0001.tif",
-      "rpc": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d1_0001_rpc.txt"
+      "img": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d2_0010.tif",
+      "rpc": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d2_0010_rpc.txt"
     }
   ],
   "roi": {
-    "x": 0,
+    "x": 1000,
     "y": 0,
-    "w": 500,
+    "w": 1000,
     "h": 1000
   },
   "full_img": false,
@@ -24,9 +24,9 @@
   "disp_range_extra_margin": 0.2,
   "n_gcp_per_axis": 5,
   "epipolar_thresh": 0.5,
-  "debug": false,
+  "debug": true,
   "temporary_dir": "/tmp",
-  "tile_size": 500,
+  "tile_size": 1000,
   "clean_tmp": true,
   "clean_intermediate": false,
   "fusion_thresh": 3,
@@ -36,5 +36,6 @@
   "disp_range_srtm_low_margin": -20,
   "skip_existing": false,
   "msk_erosion": 0,
-  "dsm_resolution": 0.5
+  "dsm_resolution": 0.5,
+  "max_processes": 1
 }

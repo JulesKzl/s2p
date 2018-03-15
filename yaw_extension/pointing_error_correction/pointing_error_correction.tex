@@ -111,82 +111,88 @@ We can then write the error as :
 \begin{align*}
 E(t_1, t_2) = \dfrac{1}{N\sqrt{a^2 + b^2}} \sum\limits_{i=1}^{N} |ax'_i+ by'_i + c_i + at_1 + bt_2|
 \end{align*}
-$=\underset{y \in \mathbb{R}^n}{\operatorname{arg\,min}} \sum_{i=1}^N \left \| z_i-y \right \|_2$\\
-$y = 
-\begin{pmatrix} 
-- at_1 \\
-- bt_2 \\
-0
-\end{pmatrix}
-$
-$z_i = 
-\begin{pmatrix} 
-ax'_i \\
-by'_i \\
-c_i
-\end{pmatrix}$
-%\paragraph{Compute vectors $p$\\}
-%We can compute the vectors going from the projection of $\textbf{x}'_i$ on $F\textbf{x}_i$ to $\textbf{x}_i$:
-%\begin{align*}
-%p(\textbf{x}_i, \textbf{x}'_i) &= d(\textbf{x}'_i, F\textbf{x}_i)\dfrac{1}{\sqrt{a_i^2 + b_i^2}}
+%$=\underset{y \in \mathbb{R}^n}{\operatorname{arg\,min}} \sum_{i=1}^N \left \| z_i-y \right \|_2$\\
+%$y = 
 %\begin{pmatrix} 
-%a_i \\
-%b_i 
-%\end{pmatrix}  \\
-%&=
-%\dfrac{|a_ix'_i + b_iy'_i + c_i|}{a_i^2 + b_i^2}
-%\begin{pmatrix} 
-%a_i \\
-%b_i \\
+%- at_1 \\
+%- bt_2 \\
+%0
 %\end{pmatrix}
-%\end{align*}
-
-%And we have : 
-
-%\begin{align*}
+%$
+%$z_i = 
 %\begin{pmatrix} 
-%t_1^* \\
-%t_2^* \\
-%\end{pmatrix} = -\text{median}\left[ p(\textbf{x}_i, \textbf{x}'_i)_{1 \leq i \leq N} \right]
-%\end{align*}
+%ax'_i \\
+%by'_i \\
+%c_i
+%\end{pmatrix}$
+\paragraph{Compute vectors $p$\\}
+We can compute the vectors going from the projection of $\textbf{x}'_i$ on $F\textbf{x}_i$ to $\textbf{x}'_i$:
+\begin{align*}
+p(\textbf{x}_i, \textbf{x}'_i) &= d(\textbf{x}'_i, F\textbf{x}_i)\dfrac{1}{\sqrt{a_i^2 + b_i^2}}
+\begin{pmatrix} 
+a_i \\
+b_i 
+\end{pmatrix}  \\
+&=
+\dfrac{|a_ix'_i + b_iy'_i + c_i|}{a_i^2 + b_i^2}
+\begin{pmatrix} 
+a_i \\
+b_i \\
+\end{pmatrix}
+\end{align*}
+
+And we have : 
+
+\begin{align*}
+\begin{pmatrix} 
+t_1^* \\
+t_2^* \\
+\end{pmatrix} = -\text{median}\left[ p(\textbf{x}_i, \textbf{x}'_i)_{1 \leq i \leq N} \right]
+\end{align*}
 
 
 
 \subsection{Roll, Pitch and Yaw Angles}
 If we assume that the scene is located at infinity with respect to the satellite, an error in the sensor attitude measurement can be modeled in image space as a translation composed with a rotation. Therefore we have
 \begin{align*}
-f(\textbf{x}) = MT\textbf{x}
+f(\textbf{x}) = RT\textbf{x}
 \end{align*}
-where $M$ is a rigid transformation and $T$ a translation:\\
+where $R$ is a rotation and $T$ a translation:\\
 \begin{align*} 
-M = 
+R = 
 \begin{pmatrix} 
-\cos(\theta) & -\sin(\theta) & t_x \\
-\sin(\theta) & \cos(\theta) & t_y \\
+\cos(\theta) & -\sin(\theta) & 0 \\
+\sin(\theta) & \cos(\theta) & 0 \\
 0 & 0 & 1
 \end{pmatrix}, \; 
 T = 
 \begin{pmatrix} 
-1 & 0 & t_1 \\
-0 & 1 & t_2 \\
+1 & 0 & t_x \\
+0 & 1 & t_y \\
 0 & 0 & 1
 \end{pmatrix}
 \end{align*}
 So we have, for $ \textbf{x} = (  x \; y \; 1)^T $, 
 \begin{align*}
-f(\textbf{x}) = MT\textbf{x} &= 
+f(\textbf{x}) = RT\textbf{x} &= 
 \begin{pmatrix} 
-\cos(\theta) & -\sin(\theta) & t_1\cos(\theta) - t_2\sin(\theta) + t_x \\
-\sin(\theta) & \cos(\theta) & t_1\sin(\theta) + t_2\cos(\theta) + t_y \\
+\cos(\theta) & -\sin(\theta) & t_x\cos(\theta) - t_y\sin(\theta)  \\
+\sin(\theta) & \cos(\theta) & t_x\sin(\theta) + t_y\cos(\theta)  \\
 0 & 0 & 1
 \end{pmatrix} \textbf{x}  \\
 &= 
-\begin{pmatrix} 
-\cos(\theta)x -\sin(\theta)y + t_1\cos(\theta) - t_2\sin(\theta) + t_x \\
-\sin(\theta)x + \cos(\theta)y + t_1\sin(\theta) + t_2\cos(\theta) + t_y \\
-1
-\end{pmatrix}
+		\begin{pmatrix}
+			\cos \theta (x + t_x) - \sin \theta (y + t_y)\\
+			\sin \theta (x + t_x) + \cos \theta (y + t_y)\\
+			1
+		\end{pmatrix}
 \end{align*}
+
+When we take the yaw into accound, the error to minimize is :
+\begin{align*}
+E(R, T) &= \dfrac{1}{N} \sum\limits_{i=1}^{N} d(RT\textbf{x}'_i, F\textbf{x}_i) \\
+&= \dfrac{1}{N} \sum\limits_{i=1}^{N} \dfrac{|a_i(x'_i + t_x)\cos \theta  - a_i (y'_i + t_y)\sin \theta  + b_i(x'_i + t_x)\sin \theta  + b_i  (y'_i + t_y)\cos \theta+ c_i|}{\sqrt{a_i^2 + b_i^2}}
+\end{align*}\\
 
 
 \appendix
