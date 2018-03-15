@@ -659,4 +659,36 @@ def gdal_resample_image_to_longlat(fname, outfname, verbose=True):
     if verbose:
         print('RUN: ' + cmd)
     return os.system(cmd)
-    
+
+def display_RSO(img, title = None, cbar = False):
+    """
+    Display an RSO image
+
+    Input:
+    img:     numpy array
+             raw image
+    [title]: string, optional
+             title for display_imshow call
+
+    Output:
+    -------
+    clipped_image
+    """
+    import numpy as np
+    assert type(img) == np.ndarray, "Input is not a numpy array"
+    new = np.copy(np.abs(img))
+    np.clip(new, 0, new.mean() + 3 * new.std(), out = new)
+    new = 255 * (new - new.min()) / (new.max() - new.min())
+    display_imshow(new, title = title, cbar = cbar)
+    return new
+
+def simple_equalization_8bit(im, percentiles=5):
+    ''' im is a numpy array
+        returns a numpy array
+    '''
+    import numpy as np
+    mi, ma = np.nanpercentile(im.flatten(), (percentiles,100-percentiles))
+    im = np.minimum(np.maximum(im,mi), ma) # clip
+    im = (im-mi)/(ma-mi)*255.0   # scale
+    im=im.astype(np.uint8)
+    return im
