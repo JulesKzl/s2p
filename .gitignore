@@ -1,13 +1,15 @@
-*.pyc
-*.o
-*.a
-*.so
-*~
-
+# specific rules #
+#################
 bin
 build
 .srtm
 experiments
+iterate.dat
+testoutput
+.idea
+
+# 3rdparty #
+############
 3rdparty/sgbm/sgbm
 3rdparty/mgm/mgm
 3rdparty/tvl1flow_3/backflow
@@ -17,19 +19,65 @@ c/sift/sift_roi
 c/sift/matching
 c/homography/homography
 
-*.DS_Store
-ipynb
+# Config directory #
+####################
+.config/**
 
-iterate.dat
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.out
 
-testoutput
-.idea
+# Temporary files #
+###################
+*.swp
+*.swo
+*~
 
-yaw_extension/.ipynb_checkpoints/*
-yaw_extension/output/*
-yaw_extension/pointing_error_correction/*.aux
-yaw_extension/pointing_error_correction/*.out
-yaw_extension/pointing_error_correction/*.bbl
-yaw_extension/pointing_error_correction/*.blg
-yaw_extension/pointing_error_correction/*.log
-yaw_extension/pointing_error_correction/*.synctex.gz
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+**/.ipynb_checkpoints
+
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# LaTeX files #
+###############
+*.blg
+*.fdb_latexmk
+*.bcf
+*.aux
+*.bbl
+*.fls
+*.synctex.gz
+*.run.xml
+*.toc
+
+# Byte-compiled / optimized / DLL files
+#######################################
+__pycache__/
+*.py[cod]
+.config/
