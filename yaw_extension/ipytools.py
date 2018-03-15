@@ -325,28 +325,46 @@ def display_image(img):
         display(Image(filename=img)) 
         
         
-def display_imshow(im, range=None, cmap='gray', axis='equal', invert=False):
+def display_imshow(im,
+                   range=None,
+                   cmap='gray',
+                   axis='equal',
+                   cbar=False,
+                   box=False,
+                   title = None,
+                   invert=False):
     '''
     display_imshow(img)
     display an numpy array using matplotlib
     img can be an url, a local path, or a numpy array
     range is a list [vmin, vmax]
-    cmap sets the colormap ('gray', 'jet', ...) 
+    cmap sets the colormap ('gray', 'jet', ...)
     axis sets the scale of the axis ('auto', 'equal', 'off')
           https://matplotlib.org/devdocs/api/_as_gen/matplotlib.pyplot.axis.html
     invert reverses the y-axis
     '''
-    import matplotlib.pyplot as plt  
+    import matplotlib.pyplot as plt
     vmin,vmax=None,None
     if range:
         vmin,vmax = range[0],range[1]
-    plt.figure()
-    plt.imshow(im.squeeze(), cmap=cmap, vmin=vmin, vmax=vmax)
+    f, ax = plt.subplots()
+    im = ax.imshow(im.squeeze(), cmap=cmap, vmin=vmin, vmax=vmax)
     if invert:
-        plt.gca().invert_yaxis()
-    plt.axis(axis)
-    plt.colorbar()
-    plt.show()        
+        ax.gca().invert_yaxis()
+    if cbar:
+        f.colorbar(im, ax = ax)
+    if title:
+        ax.set_title(title)
+    # Move left and bottom spines outward by 10 points
+    ax.spines['left'].set_position(('outward', 10))
+    ax.spines['bottom'].set_position(('outward', 10))
+    # Hide the right and top spines
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    # Only show ticks on the left and bottom spines
+    ax.yaxis.set_ticks_position('left')
+    ax.xaxis.set_ticks_position('bottom')
+    plt.show() 
         
 
 def display_table(table):
@@ -660,7 +678,7 @@ def gdal_resample_image_to_longlat(fname, outfname, verbose=True):
         print('RUN: ' + cmd)
     return os.system(cmd)
 
-def display_RSO(img, title = None, cbar = False):
+def display_RSO(img, title = None, cbar = False, plot = True):
     """
     Display an RSO image
 
@@ -679,7 +697,8 @@ def display_RSO(img, title = None, cbar = False):
     new = np.copy(np.abs(img))
     np.clip(new, 0, new.mean() + 3 * new.std(), out = new)
     new = 255 * (new - new.min()) / (new.max() - new.min())
-    display_imshow(new, title = title, cbar = cbar)
+    if plot == True:
+        display_imshow(new, title = title, cbar = cbar)
     return new
 
 def simple_equalization_8bit(im, percentiles=5):
