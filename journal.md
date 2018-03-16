@@ -115,7 +115,12 @@ sys.path.append('/home/XXXs/anaconda3/envs/s2p/lib/python3.6/site-packages/')
 Install gcc-6 and g++-6 if necessary
 ```bash
 git clone https://github.com/gfacciol/PotreeConverter_PLY_toolchain --recurse-submodules
+cd PotreeConverter_PLY_toolchain
 CC=gcc-6 CXX=g++-6 make
+# Test build: generate testPotree.html
+./test_toolchain.sh
+# Open with web browser to see the testPotree.html file generated
+xdg-open testdata/testPotree.html
 ```
 
 
