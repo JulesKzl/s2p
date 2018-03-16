@@ -68,7 +68,7 @@ Optimisation sur les coordonnées 3D des points (dans l'espace objet) pour minim
 [5] J. Sánchez. The Inverse Compositional Algorithm for Parametric Registration, IPOL, 6, 2016
 
 
-## Installation for Ubuntu 16.044
+## Installation for Ubuntu 16.04
 ```bash
 conda create -n s2p python=3.6
 conda install gdal
@@ -101,14 +101,28 @@ make test
 ### Eventuellement
 
 Ajouter dans le fichier de configuration du shell `.zshrc` :
-```
+```bash
 export LD_LIBRARY_PATH=/home/XXX/anaconda3/lib/${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 ```
 
 Et regarder si il faut mettre à jour le path python
+```bash
+sys.path.append('/home/XXXs/anaconda3/envs/s2p/lib/python3.6/site-packages/')
 ```
-sys.path.append('/home/XXXs/anaconda3/envs/s2p/lib/python3.6/site-packages/)
+
+### PotreeConverter_PLY_toolchain
+
+Install gcc-6 and g++-6 if necessary
+```bash
+git clone https://github.com/gfacciol/PotreeConverter_PLY_toolchain --recurse-submodules
+cd PotreeConverter_PLY_toolchain
+CC=gcc-6 CXX=g++-6 make
+# Test build: generate testPotree.html
+./test_toolchain.sh
+# Open with web browser to see the testPotree.html file generated
+xdg-open testdata/testPotree.html
 ```
+
 
 ## Usage for current developpement
 Move into the conda environment
