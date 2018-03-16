@@ -106,15 +106,13 @@ export LD_LIBRARY_PATH=/home/XXX/anaconda3/lib/${LD_LIBRARY_PATH:+:${LD_LIBRARY_
 ```
 
 Et regarder si il faut mettre à jour le path python
-
 ```bash
-sys.path.append('/home/XXXs/anaconda3/envs/s2p/lib/python3.6/site-packages/)
+sys.path.append('/home/XXXs/anaconda3/envs/s2p/lib/python3.6/site-packages/')
 ```
 
 ### PotreeConverter_PLY_toolchain
 
 Install gcc-6 and g++-6 if necessary
-
 ```bash
 git clone https://github.com/gfacciol/PotreeConverter_PLY_toolchain --recurse-submodules
 CC=gcc-6 CXX=g++-6 make
