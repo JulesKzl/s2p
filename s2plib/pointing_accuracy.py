@@ -17,52 +17,6 @@ from s2plib import estimation
 from s2plib import evaluation
 from s2plib.config import cfg
 
-
-def evaluation_iterative(im1, im2, rpc1, rpc2, x, y, w, h, A=None,
-                         matches=None):
-    """
-    Measures the maximal pointing error on a Pleiades' pair of images.
-
-    Args:
-        im1, im2: paths to the two Pleiades images (usually jp2 or tif)
-        rpc1, rpc2: two instances of the rpc_model.RPCModel class
-        x, y, w, h: four integers defining the rectangular ROI in the first
-            image.  (x, y) is the top-left corner, and (w, h) are the dimensions
-            of the rectangle.
-        A (optional): 3x3 numpy array containing the pointing error correction
-            for im2.
-        matches (optional): Nx4 numpy array containing a list of matches to use
-            to compute the pointing error
-
-    Returns:
-        the mean pointing error, in the direction orthogonal to the epipolar
-        lines. This error is measured in pixels.
-    """
-    if not matches:
-        matches = sift.matches_on_rpc_roi(im1, im2, rpc1, rpc2, x, y, w, h)
-    p1 = matches[:, 0:2]
-    p2 = matches[:, 2:4]
-    print('%d sift matches' % len(matches))
-
-    # apply pointing correction matrix, if available
-    if A is not None:
-        p2 = common.points_apply_homography(A, p2)
-
-    # compute the pointing error for each match
-    x1 = p1[:, 0]
-    y1 = p1[:, 1]
-    x2 = p2[:, 0]
-    y2 = p2[:, 1]
-    e = rpc_utils.compute_height(rpc1, rpc2, x1, y1, x2, y2)[1]
-    # matches = matches[e < 0.1, :]
-    # visualisation.plot_matches_pleiades(im1, im2, matches)
-    print("max, mean, min pointing error, from %d points:" % (len(matches)))
-    print(np.max(e), np.mean(e), np.min(e))
-
-    # return the mean error
-    return np.mean(np.abs(e))
-
-
 def evaluation_from_estimated_F(im1, im2, rpc1, rpc2, x, y, w, h, A=None,
         matches=None):
     """
@@ -110,31 +64,30 @@ def evaluation_from_estimated_F(im1, im2, rpc1, rpc2, x, y, w, h, A=None,
     return d_sum/len(p1)
 
 
-def euclidean_transform_matrix(v):
+def rigid_transform_matrix(v):
     """
-    Build the matrix of an euclidean transform in homogeneous coordinates.
+    Build the matrix of an rigid transform in homogeneous coordinates.
 
     Arguments:
-        v: numpy 1D array, of length 3 or 4, containing the parameters of the
+        v: numpy 1D array, of length 3, containing the parameters of the
             planar transform. These parameters are:
             v[0]: angle of the rotation, in radians
             v[1]: x coordinate of the vector of the translation
             v[2]: y coordinate of the vector of the translation
-            v[3]: horizontal shear parameter
 
     Returns:
         A numpy 3x3 matrix, representing the euclidean transform (rotation
         followed by translation) in homogeneous coordinates.
     """
-    # variables scaling
-    v[0] = v[0]/1000000
-    v[3] = v[3]/1000000
-
-    # centering of coordinates with respect to the center of the big pleiades
-    # image (40000x40000)
+    # # variables scaling
+    # v[0] = v[0]/1000000
+    # v[3] = v[3]/1000000
+    #
+    # # centering of coordinates with respect to the center of the big pleiades
+    # # image (40000x40000)
     C = np.eye(3)
-    C[0, 2] = -20000
-    C[1, 2] = -20000
+    # C[0, 2] = -500
+    # C[1, 2] = -500
 
     # matrix construction
     R = np.eye(3)
@@ -145,10 +98,8 @@ def euclidean_transform_matrix(v):
     T = np.eye(3)
     T[0, 2] = v[1]
     T[1, 2] = v[2]
-    S = np.eye(3)
-    S[0, 1] = v[3]
-    #return np.linalg.inv(C).dot(T).dot(R).dot(S).dot(C)
-    return np.dot(np.dot(np.dot(np.dot(np.linalg.inv(C), T), R), S), C)
+    return np.linalg.inv(C).dot(R).dot(T).dot(C)
+    # return np.dot(R, T)
 
 
 def cost_function(v, *args):
@@ -156,7 +107,7 @@ def cost_function(v, *args):
     Objective function to minimize in order to correct the pointing error.
 
     Arguments:
-        v: vector of size 3 or 4, containing the parameters of the euclidean
+        v: vector of size 3, containing the parameters of the rigid
             transformation we are looking for.
         rpc1, rpc2: two instances of the rpc_model.RPCModel class
         matches: 2D numpy array containing a list of matches. Each line
@@ -169,11 +120,7 @@ def cost_function(v, *args):
         The sum of pointing errors and altitude differences, as written in the
         paper formula (1).
     """
-    rpc1, rpc2, matches = args[0], args[1], args[2]
-    if len(args) == 4:
-        alpha = args[3]
-    else:
-        alpha = 0.01
+    F, matches = args[0], args[1]
 
     # verify that parameters are in the bounding box
     if (np.abs(v[0]) > 200*np.pi or
@@ -182,134 +129,89 @@ def cost_function(v, *args):
         print('warning: cost_function is going too far')
         print(v)
 
-    if (len(v) > 3):
-        if (np.abs(v[3]) > 20000):
-            print('warning: cost_function is going too far')
-            print(v)
-
     # compute the altitudes from the matches without correction
     x1 = matches[:, 0]
     y1 = matches[:, 1]
     x2 = matches[:, 2]
     y2 = matches[:, 3]
-    h0 = rpc_utils.compute_height(rpc1, rpc2, x1, y1, x2, y2)[0]
 
     # transform the coordinates of points in the second image according to
     # matrix A, built from vector v
-    A = euclidean_transform_matrix(v)
-    p2 = common.points_apply_homography(A, matches[:, 2:4])
-    x2 = p2[:, 0]
-    y2 = p2[:, 1]
+    A = rigid_transform_matrix(v)
+    p2 = np.column_stack((matches[:,2:4],np.ones((len(matches),1))))
+
+    Ax2 = np.transpose(np.dot(A, np.transpose(p2)))
+
+    # compute epipolar lines
+    p1 = np.column_stack((matches[:,0:2],np.ones((len(matches),1))))
+    Fx1 = np.transpose(np.dot(F, np.transpose(p1)))
+
+    # Compute distance between a point and a line (vectorize)
+    d = np.divide(np.sum(np.abs(np.multiply(Ax2, Fx1)), 1), np.linalg.norm(Fx1[:,0:2], axis=1))
 
     # compute the cost
-    h, e = rpc_utils.compute_height(rpc1, rpc2, x1, y1, x2, y2)
-    cost = np.sum((h - h0)**2)
-    cost *= alpha
-    cost += np.sum(e)
-
-    #print cost
+    cost = np.sum(d)
     return cost
-
-
-def cost_function_linear(v, rpc1, rpc2, matches):
-    """
-    Objective function to minimize in order to correct the pointing error.
-
-    Arguments:
-        v: vector of size 4, containing the 4 parameters of the euclidean
-            transformation we are looking for.
-        rpc1, rpc2: two instances of the rpc_model.RPCModel class
-        matches: 2D numpy array containing a list of matches. Each line
-            contains one pair of points, ordered as x1 y1 x2 y2.
-            The coordinate system is the one of the big images.
-        alpha: relative weight of the error terms: e + alpha*(h-h0)^2. See
-            paper for more explanations.
-
-    Returns:
-        The sum of pointing errors and altitude differences, as written in the
-        paper formula (1).
-    """
-    print_params(v)
-
-    # verify that parameters are in the bounding box
-    if (np.abs(v[0]) > 200*np.pi or
-        np.abs(v[1]) > 10000 or
-        np.abs(v[2]) > 10000 or
-        np.abs(v[3]) > 20000):
-        print('warning: cost_function is going too far')
-        print(v)
-
-    x, y, w, h = common.bounding_box2D(matches[:, 0:2])
-    matches_rpc = rpc_utils.matches_from_rpc(rpc1, rpc2, x, y, w, h, 5)
-    F = estimation.fundamental_matrix(matches_rpc)
-
-    # transform the coordinates of points in the second image according to
-    # matrix A, built from vector v
-    A = euclidean_transform_matrix(v)
-    p2 = common.points_apply_homography(A, matches[:, 2:4])
-
-    return evaluation.fundamental_matrix_L1(F, np.hstack([matches[:, 0:2], p2]))
-
 
 def print_params(v):
     """
     Display the pointing correction parameters.
 
     Args:
-        v: 1D numpy array of length 4
+        v: 1D numpy array of length 3
 
     This function is called by the fmin_bfgs optimization function at each
     iteration, to display the current values of the parameters.
     """
-    print('rotation: %.3e, translation: (%.3e, %.3e), horizontal shear: %.3e' % v)
+    print('rotation: %.3e, translation: (%.3e, %.3e)' % (v[0], v[1], v[2]))
 
 
-def optimize_pair(im1, im2, rpc1, rpc2, matches):
+def local_transformation(r1, r2, x, y, w, h, m):
     """
-    Runs the pointing correction on a pair of Pleiades images.
+    Estimates the optimal rotation following a translation to minimise the
+    relative pointing error on a given tile.
 
     Args:
-        im1, im2: paths to the two Pleiades images (usually jp2 or tif)
-        rpc1, rpc2: two instances of the rpc_model.RPCModel class
-        matches: numpy 4xN array containing a list of matches between the two
-            images.
+        r1, r2: two instances of the rpc_model.RPCModel class
+        x, y, w, h: region of interest in the reference image (r1)
+        m: Nx4 numpy array containing a list of matches, one per line. Each
+            match is given by (p1, p2, q1, q2) where (p1, p2) is a point of the
+            reference view and (q1, q2) is the corresponding point in the
+            secondary view.
 
     Returns:
-        a 3x3 matrix representing the planar transformation to apply to im2 in
-        order to correct the pointing error.
+        3x3 numpy array containing the homogeneous representation of the
+        optimal planar rotation composed with translation, to be applied
+        to the secondary image in order to correct the pointing error.
     """
-    # Don't use too many matches to keep the evaluation time of 'cost_function'
-    # reasonable
-    # if len(matches) > 1000:
-    #     ind = np.linspace(0, len(matches), 1000, False)
-    #     matches = matches[ind.astype(int), :]
+    # estimate the affine fundamental matrix between the two views
+    n = cfg['n_gcp_per_axis']
+    rpc_matches = rpc_utils.matches_from_rpc(r1, r2, x, y, w, h, n)
+    F = estimation.affine_fundamental_matrix(rpc_matches)
 
+    # Solve the resulting optimization problem
     from scipy.optimize import fmin_l_bfgs_b
-    print("running optimization using %d matches" % len(matches))
-    v0 = np.zeros(4)
+    v0 = np.zeros(3)
     v, min_val, debug = fmin_l_bfgs_b(
             cost_function,
             v0,
-            args=(rpc1, rpc2, matches),
+            args=(F, m),
             approx_grad=True,
             factr=1,
-            bounds=[(-150, 150), (-100, 100), (-100, 100), (-200000, 200000)])
+            #bounds=[(-150, 150), (-100, 100), (-100, 100)])
             #maxiter=50,
-            #callback=print_params,
+            callback=print_params)
             #iprint=0,
             #disp=0)
 
-    # default values are:
-    # fmin_l_bfgs_b(func, x0, fprime=None, args=(), approx_grad=0, bounds=None,
-    # m=10, factr=10000000.0, pgtol=1e-05, epsilon=1e-08, iprint=-1,
-    # maxfun=15000, disp=None)
     print('theta: %f' % v[0])
     print('tx: %f' % v[1])
     print('ty: %f' % v[2])
-    print('shear: %f' % v[3])
     print('min cost: %f' % min_val)
     print(debug)
-    return euclidean_transform_matrix(v)
+    A = rigid_transform_matrix(v)
+    print('A:', A)
+    return A
 
 
 def error_vectors(m, F, ind='ref'):
@@ -426,7 +328,8 @@ def compute_correction(img1, rpc1, img2, rpc2, x, y, w, h):
     m = sift.matches_on_rpc_roi(img1, img2, r1, r2, x, y, w, h)
 
     if m is not None:
-        A = local_translation(r1, r2, x, y, w, h, m)
+        A = local_transformation(r1, r2, x, y, w, h, m)
+        # A = local_translation(r1, r2, x, y, w, h, m)
     else:
         A = None
 

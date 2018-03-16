@@ -40,6 +40,7 @@ c/homography/homography
 *.swo
 *~
 
+
 # Packages #
 ############
 *.7z
@@ -56,7 +57,7 @@ c/homography/homography
 *.log
 *.sql
 *.sqlite
-**/.ipynb_checkpoints
+**/.ipynb_checkpoints/*
 
 # OS generated files #
 ######################

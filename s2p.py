@@ -79,7 +79,7 @@ def pointing_correction(tile, i):
         return
 
     if A is not None:  # A is the correction matrix
-        np.savetxt(os.path.join(out_dir, 'pointing.txt'), A, fmt='%6.3f')
+        np.savetxt(os.path.join(out_dir, 'pointing.txt'), A, fmt='%6.12f')
     if m is not None:  # m is the list of sift matches
         np.savetxt(os.path.join(out_dir, 'sift_matches.txt'), m, fmt='%9.3f')
         np.savetxt(os.path.join(out_dir, 'center_keypts_sec.txt'),
@@ -537,7 +537,7 @@ def heights_to_ply(tile):
     else:
         common.image_qauto(common.image_crop_gdal(cfg['images'][0]['img'], x, y,
                                                  w, h), colors)
-        
+
     triangulation.height_map_to_point_cloud(plyfile, height_map,
                                             cfg['images'][0]['rpc'], H, colors,
                                             utm_zone=cfg['utm_zone'],
@@ -703,6 +703,7 @@ def main(user_cfg, steps=ALL_STEPS):
         print('rectifying tiles...')
         parallel.launch_calls(rectification_pair, tiles_pairs, nb_workers)
 
+    exit(1)
     if 'matching' in steps:
         print('running stereo matching...')
         parallel.launch_calls(stereo_matching, tiles_pairs, nb_workers)
