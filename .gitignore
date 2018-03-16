@@ -19,6 +19,7 @@ yaw_extension/output
 c/sift/sift_roi
 c/sift/matching
 c/homography/homography
+PotreeConverter_PLY_toolchain
 
 # Config directory #
 ####################
