@@ -15,9 +15,7 @@ import bs4
 import os
 import cv2
 
-import rpc_model
 import ipytools
-import TP1_solutions
 
 
 def is_absolute(url):
