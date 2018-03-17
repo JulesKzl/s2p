@@ -70,13 +70,14 @@ def pointing_correction(tile, i):
     # correct pointing error
     print('correcting pointing on tile {} {} pair {}...'.format(x, y, i))
     try:
-        A, m = pointing_accuracy.compute_correction(img1, rpc1, img2, rpc2, x, y, w, h)
+        A, m, F = pointing_accuracy.compute_correction(img1, rpc1, img2, rpc2, x, y, w, h)
     except common.RunFailure as e:
         stderr = os.path.join(out_dir, 'stderr.log')
         with open(stderr, 'w') as f:
             f.write('ERROR during pointing correction with cmd: %s\n' % e[0]['command'])
             f.write('Stop processing this pair\n')
         return
+
 
     if A is not None:  # A is the correction matrix
         np.savetxt(os.path.join(out_dir, 'pointing.txt'), A, fmt='%6.12f')
@@ -88,6 +89,8 @@ def pointing_correction(tile, i):
             visualisation.plot_matches(img1, img2, rpc1, rpc2, m, x, y, w, h,
                                        os.path.join(out_dir,
                                                     'sift_matches_pointing.png'))
+    if F is not None:  # A is the correction matrix
+        np.savetxt(os.path.join(out_dir, 'affine_fundamental_matrix.txt'), F, fmt='%6.12f')
 
 
 def global_pointing_correction(tiles):
@@ -703,7 +706,7 @@ def main(user_cfg, steps=ALL_STEPS):
         print('rectifying tiles...')
         parallel.launch_calls(rectification_pair, tiles_pairs, nb_workers)
 
-    exit(1)
+    # exit(1)
     if 'matching' in steps:
         print('running stereo matching...')
         parallel.launch_calls(stereo_matching, tiles_pairs, nb_workers)
