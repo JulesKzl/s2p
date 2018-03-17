@@ -86,8 +86,9 @@ def rigid_transform_matrix(v):
     # # centering of coordinates with respect to the center of the big pleiades
     # # image (40000x40000)
     C = np.eye(3)
-    # C[0, 2] = -500
-    # C[1, 2] = -500
+    if (len(v) == 5):
+        C[0, 2] = v[3]
+        C[1, 2] = v[4]
 
     # matrix construction
     R = np.eye(3)
@@ -147,7 +148,7 @@ def cost_function(v, *args):
     Fx1 = np.transpose(np.dot(F, np.transpose(p1)))
 
     # Compute distance between a point and a line (vectorize)
-    d = np.divide(np.sum(np.abs(np.multiply(Ax2, Fx1)), 1), np.linalg.norm(Fx1[:,0:2], axis=1))
+    d = np.divide(np.abs(np.sum(np.multiply(Ax2, Fx1), 1)), np.linalg.norm(Fx1[:,0:2], axis=1))
 
     # compute the cost
     cost = np.sum(d)
@@ -163,7 +164,10 @@ def print_params(v):
     This function is called by the fmin_bfgs optimization function at each
     iteration, to display the current values of the parameters.
     """
-    print('rotation: %.3e, translation: (%.3e, %.3e)' % (v[0], v[1], v[2]))
+    if (len(v) == 3):
+        print('rotation: %.3e, translation: (%.3e, %.3e)' % (v[0], v[1], v[2]))
+    if (len(v) == 5):
+        print('rotation: %.3e, translation: (%.3e, %.3e), center: (%.3e, %.3e)' % (v[0], v[1], v[2], v[3], v[4]))
 
 
 def local_transformation(r1, r2, x, y, w, h, m):
@@ -191,7 +195,8 @@ def local_transformation(r1, r2, x, y, w, h, m):
 
     # Solve the resulting optimization problem
     from scipy.optimize import fmin_l_bfgs_b
-    v0 = np.zeros(3)
+    # v0 = np.zeros(3)
+    v0 = np.zeros(5)
     v, min_val, debug = fmin_l_bfgs_b(
             cost_function,
             v0,
@@ -207,11 +212,14 @@ def local_transformation(r1, r2, x, y, w, h, m):
     print('theta: %f' % v[0])
     print('tx: %f' % v[1])
     print('ty: %f' % v[2])
+    if (len(v) == 5):
+        print('cx: %f' % v[3])
+        print('cy: %f' % v[4])
     print('min cost: %f' % min_val)
     print(debug)
     A = rigid_transform_matrix(v)
     print('A:', A)
-    return A
+    return A, F
 
 
 def error_vectors(m, F, ind='ref'):
@@ -297,7 +305,7 @@ def local_translation(r1, r2, x, y, w, h, m):
     A = np.array([[1, 0, -out_x],
                   [0, 1, -out_y],
                   [0, 0, 1]])
-    return A
+    return A, F
 
 
 def compute_correction(img1, rpc1, img2, rpc2, x, y, w, h):
@@ -328,12 +336,13 @@ def compute_correction(img1, rpc1, img2, rpc2, x, y, w, h):
     m = sift.matches_on_rpc_roi(img1, img2, r1, r2, x, y, w, h)
 
     if m is not None:
-        A = local_transformation(r1, r2, x, y, w, h, m)
-        # A = local_translation(r1, r2, x, y, w, h, m)
+        A, F = local_transformation(r1, r2, x, y, w, h, m)
+        # A, F = local_translation(r1, r2, x, y, w, h, m)
     else:
         A = None
+        F = None
 
-    return A, m
+    return A, m, F
 
 
 def from_next_tiles(tiles, ntx, nty, col, row):
