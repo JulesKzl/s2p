@@ -90,6 +90,8 @@ def visualize_pointing_error(F, m, A):
     """
     plt.figure()
     f, ax = plt.subplots(1, 2, figsize=(20,10))
+    e_2 = 0
+    e_3 = 0
     for (x1, y1, x2, y2) in m:
         p1 = np.array([x1, y1, 1]).reshape(3, 1)
         Fp = np.dot(F, p1)
@@ -105,5 +107,12 @@ def visualize_pointing_error(F, m, A):
         Ap2 = np.dot(A, p2)
         [x3, y3, _] = Ap2.flatten()
         proj_p3 = np.abs((a*x3 + b*y3 + c)/(a**2 + b**2))*np.array([a, b])
+
+        # Compute global error
+        e_2 += np.abs((a*x2 + b*y2 + c)/np.sqrt(a**2 + b**2))
+        e_3 += np.abs((a*x3 + b*y3 + c)/np.sqrt(a**2 + b**2))
+
+        # Display
         ax[1].plot(x3, y3, '.', alpha=0)
         ax[1].arrow(x3, y3, -proj_p3[0], -proj_p3[1], head_width=3, head_length=5, color='green')
+    return e_2, e_3

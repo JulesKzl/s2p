@@ -92,13 +92,14 @@ def rigid_transform_matrix(v):
 
     # matrix construction
     R = np.eye(3)
-    R[0, 0] =  np.cos(v[0])
-    R[0, 1] =  np.sin(v[0])
-    R[1, 0] = -np.sin(v[0])
-    R[1, 1] =  np.cos(v[0])
+    if (len(v) == 3):
+        R[0, 0] =  np.cos(v[2])
+        R[0, 1] =  np.sin(v[2])
+        R[1, 0] = -np.sin(v[2])
+        R[1, 1] =  np.cos(v[2])
     T = np.eye(3)
-    T[0, 2] = v[1]
-    T[1, 2] = v[2]
+    T[0, 2] = v[0]
+    T[1, 2] = v[1]
     return np.linalg.inv(C).dot(R).dot(T).dot(C)
     # return np.dot(R, T)
 
@@ -124,11 +125,11 @@ def cost_function(v, *args):
     F, matches = args[0], args[1]
 
     # verify that parameters are in the bounding box
-    if (np.abs(v[0]) > 200*np.pi or
-        np.abs(v[1]) > 10000 or
-        np.abs(v[2]) > 10000):
-        print('warning: cost_function is going too far')
-        print(v)
+    # if (np.abs(v[2]) > 200*np.pi or
+    #     np.abs(v[0]) > 10000 or
+    #     np.abs(v[1]) > 10000):
+    #     print('warning: cost_function is going too far')
+    #     print(v)
 
     # compute the altitudes from the matches without correction
     x1 = matches[:, 0]
@@ -164,6 +165,8 @@ def print_params(v):
     This function is called by the fmin_bfgs optimization function at each
     iteration, to display the current values of the parameters.
     """
+    if (len(v) == 2):
+        print('translation: (%.3e, %.3e)' % (v[0], v[1]))
     if (len(v) == 3):
         print('rotation: %.3e, translation: (%.3e, %.3e)' % (v[0], v[1], v[2]))
     if (len(v) == 5):
@@ -196,7 +199,7 @@ def local_transformation(r1, r2, x, y, w, h, m):
     # Solve the resulting optimization problem
     from scipy.optimize import fmin_l_bfgs_b
     # v0 = np.zeros(3)
-    v0 = np.zeros(5)
+    v0 = np.zeros(2)
     v, min_val, debug = fmin_l_bfgs_b(
             cost_function,
             v0,
@@ -209,9 +212,11 @@ def local_transformation(r1, r2, x, y, w, h, m):
             #iprint=0,
             #disp=0)
 
-    print('theta: %f' % v[0])
-    print('tx: %f' % v[1])
-    print('ty: %f' % v[2])
+
+    print('tx: %f' % v[0])
+    print('ty: %f' % v[1])
+    if (len(v) == 3):
+        print('theta: %f' % v[2])
     if (len(v) == 5):
         print('cx: %f' % v[3])
         print('cy: %f' % v[4])
