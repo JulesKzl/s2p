@@ -73,7 +73,7 @@ def workaround_json_int64(o):
     if isinstance(o,np.integer) : return int(o)
     raise TypeError
 
-def write_json(images_name, num_variable=0, roi=None):
+def write_json(images_name, num_variable=0, tile_size=500, roi=None, rpc_name=[]):
     """ Write JSON with chosen triplets """
     # Get current config file
     with open('config.json', 'r') as f:
@@ -81,14 +81,17 @@ def write_json(images_name, num_variable=0, roi=None):
     user_cfg['out_dir'] = './output'
     # Config path of images and RPC
     images = []
-    for img_name in images_name:
+    for i, img_name in enumerate(images_name):
         img_dict = {}
         img_dict['img'] = img_name
-        img_dict['rpc'] = '..' + img_name.split('.')[2] + '_rpc.txt'
+        if (len(rpc_name) > 0):
+            img_dict['rpc'] = rpc_name[i]
+        else:
+            img_dict['rpc'] = '..' + img_name.split('.')[2] + '_rpc.txt'
         images.append(img_dict)
     user_cfg['images'] = images
     # Tile size
-    user_cfg["tile_size"] = 1000
+    user_cfg["tile_size"] = tile_size
     # Config ROI
     if (roi == None):
         user_cfg["full_img"] = True

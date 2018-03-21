@@ -2,19 +2,19 @@
   "out_dir": "./output",
   "images": [
     {
-      "img": "../data/s02_20150507T020554Z/video_frames/s02_20150507T02055427Z.tif",
-      "rpc": "../data/s02_20150507T020554Z/video_frames/s02_20150507T02055427Z_rpc.txt"
+      "img": "../testdata/input_pair/img_01.tif",
+      "rpc": "../testdata/input_pair/rpc_01.xml"
     },
     {
-      "img": "../data/s02_20150507T020554Z/video_frames/s02_20150507T02055760Z.tif",
-      "rpc": "../data/s02_20150507T020554Z/video_frames/s02_20150507T02055760Z_rpc.txt"
+      "img": "../testdata/input_pair/img_02.tif",
+      "rpc": "../testdata/input_pair/rpc_02.xml"
     }
   ],
   "roi": {
-    "x": 0,
-    "y": 0,
-    "w": 1000,
-    "h": 1000
+    "x": 150,
+    "y": 150,
+    "w": 700,
+    "h": 700
   },
   "full_img": false,
   "matching_algorithm": "mgm",
@@ -26,7 +26,7 @@
   "epipolar_thresh": 0.5,
   "debug": true,
   "temporary_dir": "/tmp",
-  "tile_size": 1000,
+  "tile_size": 300,
   "clean_tmp": true,
   "clean_intermediate": false,
   "fusion_thresh": 3,
