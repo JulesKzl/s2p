@@ -38,4 +38,5 @@ install:
 
 script:
   - make
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make test; fi
+  # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make test; fi
+  - make test
