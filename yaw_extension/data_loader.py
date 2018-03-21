@@ -73,7 +73,7 @@ def workaround_json_int64(o):
     if isinstance(o,np.integer) : return int(o)
     raise TypeError
 
-def write_json(images_name, roi=None):
+def write_json(images_name, num_variable=0, roi=None):
     """ Write JSON with chosen triplets """
     # Get current config file
     with open('config.json', 'r') as f:
@@ -95,6 +95,12 @@ def write_json(images_name, roi=None):
     else:
         user_cfg["full_img"] = False
         user_cfg["roi"] = roi
+    # Number of variable to optimize when correction pointing error
+    # 0 = use translation
+    # 2 = only translation enable in optimizer
+    # 3 = Translation + Rotation
+    # 5 = Translation + Rotation + center
     # Modify config file
+    user_cfg["n_optim_variables"] = num_variable
     with open('config.json', 'w') as f:
         json.dump(user_cfg, f, indent=2, default=workaround_json_int64)

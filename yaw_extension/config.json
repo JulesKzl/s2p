@@ -2,12 +2,12 @@
   "out_dir": "./output",
   "images": [
     {
-      "img": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d2_0011.tif",
-      "rpc": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d2_0011_rpc.txt"
+      "img": "../data/s02_20150507T020554Z/video_frames/s02_20150507T02055427Z.tif",
+      "rpc": "../data/s02_20150507T020554Z/video_frames/s02_20150507T02055427Z_rpc.txt"
     },
     {
-      "img": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d2_0011.tif",
-      "rpc": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d2_0011_rpc.txt"
+      "img": "../data/s02_20150507T020554Z/video_frames/s02_20150507T02055760Z.tif",
+      "rpc": "../data/s02_20150507T020554Z/video_frames/s02_20150507T02055760Z_rpc.txt"
     }
   ],
   "roi": {
@@ -37,5 +37,6 @@
   "skip_existing": false,
   "msk_erosion": 0,
   "dsm_resolution": 0.5,
-  "max_processes": 1
+  "max_processes": 1,
+  "n_optim_variables": 3
 }

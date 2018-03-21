@@ -173,7 +173,7 @@ def print_params(v):
         print('rotation: %.3e, translation: (%.3e, %.3e), center: (%.3e, %.3e)' % (v[0], v[1], v[2], v[3], v[4]))
 
 
-def local_transformation(r1, r2, x, y, w, h, m):
+def local_transformation(r1, r2, x, y, w, h, m, n_optim_variables=2):
     """
     Estimates the optimal rotation following a translation to minimise the
     relative pointing error on a given tile.
@@ -198,8 +198,7 @@ def local_transformation(r1, r2, x, y, w, h, m):
 
     # Solve the resulting optimization problem
     from scipy.optimize import fmin_l_bfgs_b
-    # v0 = np.zeros(3)
-    v0 = np.zeros(2)
+    v0 = np.zeros(n_optim_variables)
     v, min_val, debug = fmin_l_bfgs_b(
             cost_function,
             v0,
@@ -313,7 +312,7 @@ def local_translation(r1, r2, x, y, w, h, m):
     return A, F
 
 
-def compute_correction(img1, rpc1, img2, rpc2, x, y, w, h):
+def compute_correction(img1, rpc1, img2, rpc2, x, y, w, h, n_optim_variables=0):
     """
     Computes pointing correction matrix for specific ROI
 
@@ -341,8 +340,11 @@ def compute_correction(img1, rpc1, img2, rpc2, x, y, w, h):
     m = sift.matches_on_rpc_roi(img1, img2, r1, r2, x, y, w, h)
 
     if m is not None:
-        A, F = local_transformation(r1, r2, x, y, w, h, m)
-        # A, F = local_translation(r1, r2, x, y, w, h, m)
+        if (n_optim_variables == 0):
+            A, F = local_translation(r1, r2, x, y, w, h, m)
+        else:
+            A, F = local_transformation(r1, r2, x, y, w, h, m, n_optim_variables)
+
     else:
         A = None
         F = None

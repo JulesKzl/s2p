@@ -70,7 +70,11 @@ def pointing_correction(tile, i):
     # correct pointing error
     print('correcting pointing on tile {} {} pair {}...'.format(x, y, i))
     try:
-        A, m, F = pointing_accuracy.compute_correction(img1, rpc1, img2, rpc2, x, y, w, h)
+        if cfg['max_processes']:
+            n_optim_variables = cfg['n_optim_variables']
+        else:
+            n_optim_variables = 0
+        A, m, F = pointing_accuracy.compute_correction(img1, rpc1, img2, rpc2, x, y, w, h, n_optim_variables)
     except common.RunFailure as e:
         stderr = os.path.join(out_dir, 'stderr.log')
         with open(stderr, 'w') as f:
