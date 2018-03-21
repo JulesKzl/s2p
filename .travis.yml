@@ -14,7 +14,7 @@ matrix:
       env: CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal
     - os: linux
       dist: trusty
-      python: 3.6
+      python: 3.5
       env: CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal
     - os: osx
       language: generic
