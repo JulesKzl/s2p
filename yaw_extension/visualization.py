@@ -84,12 +84,13 @@ def visualize_epipolar(im1, im2, F, m):
         ax[0].imshow(im1.squeeze(), cmap='gray')
         ax[1].imshow(im2.squeeze(), cmap='gray')
 
-def visualize_pointing_error(F, m, A):
+def visualize_pointing_error(F, m, A, plot=True):
     """ Visualize epipolar line in the second image from a point in
         the first image
     """
-    plt.figure()
-    f, ax = plt.subplots(1, 2, figsize=(20,10))
+    if (plot):
+        plt.figure()
+        f, ax = plt.subplots(1, 2, figsize=(20,10))
     e_2 = 0
     e_3 = 0
     for (x1, y1, x2, y2) in m:
@@ -99,8 +100,9 @@ def visualize_pointing_error(F, m, A):
 
         # Compute orignal picture
         proj_p2 = np.abs((a*x2 + b*y2 + c)/(a**2 + b**2))*np.array([a, b])
-        ax[0].plot(x2, y2, '.', alpha=0)
-        ax[0].arrow(x2, y2, -proj_p2[0], -proj_p2[1], head_width=3, head_length=5, color='green')
+        if (plot):
+            ax[0].plot(x2, y2, '.', alpha=0)
+            ax[0].arrow(x2, y2, -proj_p2[0], -proj_p2[1], head_width=3, head_length=5, color='green')
 
         # Compute after transformation
         p2 = np.array([x2, y2, 1]).reshape(3, 1)
@@ -113,6 +115,7 @@ def visualize_pointing_error(F, m, A):
         e_3 += np.abs((a*x3 + b*y3 + c)/np.sqrt(a**2 + b**2))
 
         # Display
-        ax[1].plot(x3, y3, '.', alpha=0)
-        ax[1].arrow(x3, y3, -proj_p3[0], -proj_p3[1], head_width=3, head_length=5, color='green')
+        if (plot):
+            ax[1].plot(x3, y3, '.', alpha=0)
+            ax[1].arrow(x3, y3, -proj_p3[0], -proj_p3[1], head_width=3, head_length=5, color='green')
     return e_2, e_3

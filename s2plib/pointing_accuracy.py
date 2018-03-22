@@ -124,6 +124,11 @@ def cost_function(v, *args):
     """
     F, matches = args[0], args[1]
 
+    v_copy = v.copy()
+    # Normalize
+    # if (len(v) > 2):
+    #     v_copy[2] /= 10
+
     # verify that parameters are in the bounding box
     # if (np.abs(v[2]) > 200*np.pi or
     #     np.abs(v[0]) > 10000 or
@@ -139,7 +144,7 @@ def cost_function(v, *args):
 
     # transform the coordinates of points in the second image according to
     # matrix A, built from vector v
-    A = rigid_transform_matrix(v)
+    A = rigid_transform_matrix(v_copy)
     p2 = np.column_stack((matches[:,2:4],np.ones((len(matches),1))))
 
     Ax2 = np.transpose(np.dot(A, np.transpose(p2)))
@@ -168,9 +173,9 @@ def print_params(v):
     if (len(v) == 2):
         print('translation: (%.3e, %.3e)' % (v[0], v[1]))
     if (len(v) == 3):
-        print('rotation: %.3e, translation: (%.3e, %.3e)' % (v[0], v[1], v[2]))
+        print('rotation: %.3e, translation: (%.3e, %.3e)' % (v[2], v[0], v[1]))
     if (len(v) == 5):
-        print('rotation: %.3e, translation: (%.3e, %.3e), center: (%.3e, %.3e)' % (v[0], v[1], v[2], v[3], v[4]))
+        print('rotation: %.3e, translation: (%.3e, %.3e), center: (%.3e, %.3e)' % (v[2], v[0], v[1], v[3], v[4]))
 
 
 def local_transformation(r1, r2, x, y, w, h, m, n_optim_variables=2):
@@ -211,6 +216,9 @@ def local_transformation(r1, r2, x, y, w, h, m, n_optim_variables=2):
             #iprint=0,
             #disp=0)
 
+    # Dnormalize
+    # if (len(v) > 2):
+    #     v[2] /= 10
 
     print('tx: %f' % v[0])
     print('ty: %f' % v[1])
