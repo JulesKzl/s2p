@@ -70,7 +70,7 @@ def pointing_correction(tile, i):
     # correct pointing error
     print('correcting pointing on tile {} {} pair {}...'.format(x, y, i))
     try:
-        if cfg['n_optim_variables']:
+        if 'n_optim_variables' in cfg:
             n_optim_variables = cfg['n_optim_variables']
         else:
             n_optim_variables = 0
