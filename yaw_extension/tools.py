@@ -1,6 +1,12 @@
+import numpy as np
 from glob import glob
 from tqdm import tqdm
 from ipytools import readGTIFF
+from ipytools import writeGTIFF
+from ipytools import readGTIFFmeta
+from ipytools import gdal_resample_image_to_longlat
+from ipytools import gdal_get_longlat_of_pixel
+from ipytools import clickablemap
 
 # Display tool
 import matplotlib.pyplot as plt
@@ -153,7 +159,7 @@ def get_image_longlat_polygon(fname):
     cols = [0,W,W,0]
     rows = [0,0,H,H]
 
-    coords = ipytools.gdal_get_longlat_of_pixel(fname,cols, rows, verbose=False)
+    coords = gdal_get_longlat_of_pixel(fname, cols, rows, verbose=False)
 
     # remove the altitude (which is 0)
     coords = [ [x[0],x[1]] for x in coords ]
@@ -161,14 +167,12 @@ def get_image_longlat_polygon(fname):
     poly = {'type': 'Polygon', 'coordinates': [coords]}
     return poly
 
-img = d1_1z[0]
-tmp_img = "tmp/" + img.split("pan_")[-1]
-tmp_png = tmp_img.replace(".tif", ".png")
 
 def reprojection(img, tmp_img = None, tmp_png = None,
                  display = False, verbose = False):
     """
-
+    TO DO: Reprojection of list of IMG
+    DIFFICULTIES: Vbox returned by overlaymap, not map instance
     """
     if tmp_img is None:
         tmp_img = "tmp/" + img.split("pan_")[-1]
@@ -176,7 +180,7 @@ def reprojection(img, tmp_img = None, tmp_png = None,
         tmp_png = tmp_img.replace(".tif", ".png")
 
     ## Reproject the image in longlat (one GeoTIFF and one PNG)
-    ipytools.gdal_resample_image_to_longlat(img, tmp_img)
+    gdal_resample_image_to_longlat(img, tmp_img)
 
     # Extract the new image footprint from the GeoTIFF
     footprint = get_image_longlat_polygon(tmp_img)
@@ -184,12 +188,33 @@ def reprojection(img, tmp_img = None, tmp_png = None,
     if verbose:
         print(footprint)
 
-    # Convert TIFF to 8-bits and write a PNG
-    data = readGTIFF(tmp_img)
-    writeGTIFF(display_RSO(data, plot = False), tmp_png)
-
     if display:
+        # Convert TIFF to 8-bits and write a PNG
+        data = readGTIFF(tmp_img)
+        writeGTIFF(display_RSO(data, plot = False), tmp_png)
         # Display the reprojected PNG overlaid on a map at the coordinates of the footprint
         mo = ipytools.overlaymap(footprint0, tmp_png , zoom = 13)
         display(mo)
     return footprint
+
+def geolocalisation(trace):
+    """
+    """
+    if type(trace) == dict:
+        imgs = list(trace.values())
+        imgs.sort()
+        imgs
+    else:
+        assert type(trace) == list, "Trace should be a list or a dict of images"
+
+    footprint = []
+    for i in tqdm(imgs):
+        footprint.append(get_image_longlat_polygon(i))
+
+    m = clickablemap()
+
+    for i in range(len(imgs)):
+        m.add_GeoJSON(footprint[i])
+
+    m.center = footprint[0]['coordinates'][0][0][::-1]
+    display(m)
