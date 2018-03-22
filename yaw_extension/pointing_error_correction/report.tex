@@ -93,11 +93,30 @@
 
 \subsection{Geolocalisation}
 
+\newpage
 \begin{figure}
+    \centering
     \includegraphics[width = 0.95\textwidth]{d1.png}
-    \caption{Mosaic of d1}
+    \caption{Mosaic of d1. From left to right: 1Z, 7Z, 8Z}
     \label{}
 \end{figure}
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.95\textwidth]{d2.png}
+    \caption{Mosaic of d2. From left to right: 1Z, 7Z, 8Z}
+    \label{}
+\end{figure}
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.95\textwidth]{d3.png}
+    \caption{Mosaic of d3. From left to right: 1Z, 7Z, 8Z}
+    \label{}
+\end{figure}
+
 
 
 \section{Attitude of a Satellite}
@@ -264,6 +283,74 @@ When we take the yaw into accound, the error to minimize is :
 E(R, T) &= \dfrac{1}{N} \sum\limits_{i=1}^{N} d(RT\textbf{x}'_i, F\textbf{x}_i) \\
 &= \dfrac{1}{N} \sum\limits_{i=1}^{N} \dfrac{|a_i(x'_i + t_x)\cos \theta  - a_i (y'_i + t_y)\sin \theta  + b_i(x'_i + t_x)\sin \theta  + b_i  (y'_i + t_y)\cos \theta+ c_i|}{\sqrt{a_i^2 + b_i^2}}
 \end{align*}\\
+
+\subsection{After rectification}
+
+Another way to correct the pointing error in the rectified setting is to find $R*$ and $T^*$ minimizing the pointing error defined as follow :
+\begin{align}
+    (R^*, T^*) = \argmin{R,T} \frac{1}{N} \sum_{i=1}^N d(TR\bm{x_i'}, F\bm{x}_i)^2
+\end{align}
+As in~\cite{de2014b}
+
+After rectification, the horizontal line $F\bm{x}_i$ can be written, in homogeneous coordinates, as
+\begin{align*}
+F\bm{x}_i =  \begin{bmatrix} 0 & 1 & y_i \end{bmatrix}
+\end{align*}
+With these notations, if the model now includes a rotation $R$, for each point correspondence $(\bm{x}_i , \bm{x}'_i)$, we have
+\begin{align*}
+e(\textbf{x}_i, \textbf{x}'_i) = d(TR\bm{x}'_i, epi^{\textbf{x}_i}_{u v}(R)) = d(TR\bm{x}'_i, F\bm{x}_i) = |\sin \theta x_i'  + \cos \theta y_i' + t - y_i |
+\end{align*}
+where $\theta$ is the angle of the rotation.
+
+
+Dans l'espace rectifié, on ne s'intéresse qu'à la deuxième coordonnées
+$$
+\min_{\theta, t}\sum_i |\sin \theta x_i'  + \cos \theta y_i' + t - y_i |
+$$
+
+Si on considère que l'angle de la rotation à appliquer est petit devant $2\pi$, il vient :
+$$
+\min_{\theta, t}\sum_i |\theta x_i'  + \theta y_i' + t - y_i |
+$$
+Cette approximation n'est pas dénué de sens étant donné la précision des instruments mesurant les angles sur Sentinel, Pleiages... ($50~\mu rad$) (sources à trouver). Donc même si Planet a des capteurs 100 fois moins précis, on reste en dessous du degré. Donc on s'attend à trouver un angle $\theta$ de moins d'un degré.
+
+Que l'on peut exprimer matriciellement sous la forme de :
+$$
+\min_x \lVert Ax + b \rVert^2
+$$
+
+avec
+$$
+A =
+\begin{pmatrix}
+x_1' & 1 \\
+x_2' & 1 \\
+\vdots & \vdots \\
+x_n' & 1 \\
+\end{pmatrix}
+$$
+
+et
+$$
+x =
+\begin{pmatrix}
+\theta \\
+t
+\end{pmatrix}
+$$
+
+et
+
+$$
+b =
+\begin{pmatrix}
+y_1' - y_1\\
+y_2' - y_2\\
+\vdots\\
+y_1' - y_1\\
+\end{pmatrix}
+$$
+Convertir $\theta$ et $t$ dans l'espace original pour pouvoir les comparer
 
 
 \appendix
