@@ -209,10 +209,6 @@ def local_transformation(r1, r2, x, y, w, h, m, pointing_error_correction_method
     rpc_matches = rpc_utils.matches_from_rpc(r1, r2, x, y, w, h, n)
     F = estimation.affine_fundamental_matrix(rpc_matches)
 
-    # Test recitifaction
-    hmargin = cfg['horizontal_margin']
-    vmargin = cfg['vertical_margin']
-
     # Solve the resulting optimization problem
     from scipy.optimize import fmin_l_bfgs_b
     v0 = np.zeros(pointing_error_correction_method)
@@ -281,13 +277,29 @@ def local_translation_rotation(r1, r2, x, y, w, h, m):
 
     # Compute rectification homographies
     S1, S2 = estimation.rectifying_similarities_from_affine_fundamental_matrix(F, cfg['debug'])
+    hmargin = cfg['horizontal_margin']
+    vmargin = cfg['vertical_margin']
+    H1, H2, F_rect = rectification.rectification_homographies(rpc_matches, x, y, w, h, hmargin, vmargin)
 
     # compute horizontal epipolar lines
     N = len(m)
     p1 = np.column_stack((m[:,0:2],np.ones((N,1))))
-    Fx1 = np.dot(F, np.transpose(p1))
+    Sp1 = np.dot(S1, np.transpose(p1))
+    FSp1 = np.dot(F_rect, Sp1).T
+    print(FSp1[:10])
+    Hp1 = np.dot(H1, np.transpose(p1))
+    FHp1 = np.dot(F_rect, Hp1).T
+    print(FHp1[:10])
+    Fx1 = np.dot(F_rect, np.transpose(p1))
+    Fx1T = Fx1.T
+    print(Fx1T[:10])
+    # Compute normal vector to epipolar liness
+    ab = np.array([Fx1T[0, 0], Fx1T[0, 1]])
+    ab = ab/np.linalg.norm(ab)
+    print(ab)
     # Apply rectification on image 1
     S1Fx1 = np.dot(S1, Fx1).T
+    print(S1Fx1[:10])
     # Apply rectification on image 2
     p2 = np.column_stack((m[:,2:4],np.ones((N,1))))
     S2p2 = np.dot(S2, np.transpose(p2)).T
@@ -296,7 +308,7 @@ def local_translation_rotation(r1, r2, x, y, w, h, m):
     # Variable of optimization problem
     A_ = np.ones((N,1))
     # A_ = np.column_stack((S2p2[:,0].reshape(N, 1),np.ones((N,1))))
-    b_ = p2[:, 1] - Fx1[1, :]
+    b_ = S2p2[:, 1] - S1Fx1[:, 2]
     # b_ = S2p2[:, 1] - S1Fx1[:, 1]
 
     # min ||Ax + b||^2 => x = - (A^T A )^-1 A^T b
