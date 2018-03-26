@@ -12,112 +12,32 @@
 \date{}
 
 \begin{document}
-\maketitle
+%\maketitle
 
-% \begin{tabularx}{0.9\textwidth}{@{} l X r @{} }
-% 	{\textsc{Master MVA}}  &  & \textsc{} \\
-% 	\textsc{Remote sensing} &  & {ENS Paris Saclay}       \\
-% \end{tabularx}
-% \vspace{1.5cm}
-% \begin{center}
-%
-% 	\rule[11pt]{5cm}{0.5pt}
-%
-% 	\textbf{\LARGE \textsc{Pointing error correction}}
-% 	\vspace{0.5cm}
-%
-% 	Jules Kozolinsky,
-% 	Vincent Matthys
-%
-% 	jules.kozolinsky@ens-cachan.fr\\
-% 	vincent.matthys@ens-paris-saclay.fr
-%
-% 	\rule{5cm}{0.5pt}
-%
-% 	\vspace{1.5cm}
-% \end{center}
+ \begin{tabularx}{0.9\textwidth}{@{} l X r @{} }
+ 	{\textsc{Master MVA}}  &  & \textsc{} \\
+ 	\textsc{Remote sensing} &  & {ENS Paris Saclay}       \\
+ \end{tabularx}
+ \vspace{1.5cm}
+ \begin{center}
 
-\section{Planet data}
+ 	\rule[11pt]{5cm}{0.5pt}
 
-\subsection{Structure}
+ 	\textbf{\LARGE \textsc{Pointing error correction}}
+ 	\vspace{0.5cm}
 
+ 	Jules Kozolinsky,
+ 	Vincent Matthys
 
-\begin{forest}
-  my label/.style={
-    label={[font=\sffamily]right:{#1}},
-  },
-  for tree={
-    folder,
-    font=\sffamily,
-    text=white,
-    minimum height=0.75cm,
-    if level=0{fill=ForestGreen}{fill/.wrap pgfmath arg={SlateBlue#1}{int(4-(mod((level()-1),4)))}},
-    rounded corners=4pt,
-    grow'=0,
-    edge={ForestGreen,rounded corners,line width=1pt},
-    fit=band,
-  },
-  [data
-    [s03\_20161003T161107Z
-      [panchromatic
-        [s03\_20161003T161107Z\_pan\_d1\_0001\_rpc.txt]
-        [s03\_20161003T161107Z\_pan\_d1\_0001.tif]
-      ]
-      [pansharp
-        [s03\_20161003T161107Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
-        [s03\_20161003T161107Z\_pansharp\_bgrn\_d1\_0001.tif]
-      ]
-    ]
-    [s03\_20161003T161148Z
-      [panchromatic
-        [s03\_20161003T161148Z\_pan\_d1\_0001\_rpc.txt]
-        [s03\_20161003T161148Z\_pan\_d1\_0001.tif]
-      ]
-      [pansharp
-        [s03\_20161003T161148Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
-        [s03\_20161003T161148Z\_pansharp\_bgrn\_d1\_0001.tif]
-      ]
-    ]
-    [s03\_20161003T161231Z
-      [panchromatic
-        [s03\_20161003T161231Z\_pan\_d1\_000\_rpc.txt]
-        [s03\_20161003T161231Z\_pan\_d1\_0001.tif]
-      ]
-      [pansharp
-        [s03\_20161003T161231Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
-        [s03\_20161003T161231Z\_pansharp\_bgrn\_d1\_0001.tif]
-      ]
-    ]
-  ]
-\end{forest}
+ 	\href{mailto:jules.kozolinsky@ens-cachan.fr}{jules.kozolinsky@ens-cachan.fr} \\
+ 	\href{mailto:vincent.matthys@ens-paris-saclay.fr}{vincent.matthys@ens-paris-saclay.fr}
 
-\subsection{Geolocalisation}
+ 	\rule{5cm}{0.5pt}
 
-\newpage
-\begin{figure}
-    \centering
-    \includegraphics[width = 0.95\textwidth]{d1.png}
-    \caption{Mosaic of d1. From left to right: 1Z, 7Z, 8Z}
-    \label{}
-\end{figure}
-
-\newpage
-\begin{figure}
-    \centering
-    \includegraphics[width = 0.95\textwidth]{d2.png}
-    \caption{Mosaic of d2. From left to right: 1Z, 7Z, 8Z}
-    \label{}
-\end{figure}
-
-\newpage
-\begin{figure}
-    \centering
-    \includegraphics[width = 0.95\textwidth]{d3.png}
-    \caption{Mosaic of d3. From left to right: 1Z, 7Z, 8Z}
-    \label{}
-\end{figure}
-
-
+ 	\vspace{1.5cm}
+ \end{center}
+ 
+ \tableofcontents
 
 \section{Attitude of a Satellite}
 
@@ -292,8 +212,94 @@ t^*
 \subsubsection{Solving Numerically an Optimization Problem}
 To correct the pointing error in the rectified setting we find $R^*$ and $T^*$ minimizing the pointing error defined as follow :
 \begin{align}
-    (R^*, T^*) = \argmin{R,T} \sum_{i=1}^N d(TR\bm{x_i'}, F\bm{x}_i)^2
+    (R^*, T^*) = \argmin{R,T} \sum_{i=1}^N d(RT\bm{x_i'}, F\bm{x}_i)
 \end{align}
+
+Since we are not able to solve this optimization problem analytically, we solve it numerically thanks to the L-BFGS algorithm. As input are the correspondences on the images and the affine approximation matrix and the optimization algorithm outputs the optimal angle $\theta \in [0, 2\pi]$ corresponding to the error on the yaw and a translation $t \in \mathbb{R}$ corresponding to a translation in the normal direction w.r.t. the epipolar lines. 
+
+\paragraph{Limited-memory BFGS\\}
+Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton methods that approximates the BFGS algorithm using a limited amount of computer memory. In our case we do not need to compute the gradient analytically since the algorithm approximates it using finite difference. We use this algorithm as a black box to solve the minimization problem.
+
+\section{Planet data}
+
+\subsection{Structure}
+
+
+\begin{forest}
+  my label/.style={
+    label={[font=\sffamily]right:{#1}},
+  },
+  for tree={
+    folder,
+    font=\sffamily,
+    text=white,
+    minimum height=0.75cm,
+    if level=0{fill=ForestGreen}{fill/.wrap pgfmath arg={SlateBlue#1}{int(4-(mod((level()-1),4)))}},
+    rounded corners=4pt,
+    grow'=0,
+    edge={ForestGreen,rounded corners,line width=1pt},
+    fit=band,
+  },
+  [data
+    [s03\_20161003T161107Z
+      [panchromatic
+        [s03\_20161003T161107Z\_pan\_d1\_0001\_rpc.txt]
+        [s03\_20161003T161107Z\_pan\_d1\_0001.tif]
+      ]
+      [pansharp
+        [s03\_20161003T161107Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
+        [s03\_20161003T161107Z\_pansharp\_bgrn\_d1\_0001.tif]
+      ]
+    ]
+    [s03\_20161003T161148Z
+      [panchromatic
+        [s03\_20161003T161148Z\_pan\_d1\_0001\_rpc.txt]
+        [s03\_20161003T161148Z\_pan\_d1\_0001.tif]
+      ]
+      [pansharp
+        [s03\_20161003T161148Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
+        [s03\_20161003T161148Z\_pansharp\_bgrn\_d1\_0001.tif]
+      ]
+    ]
+    [s03\_20161003T161231Z
+      [panchromatic
+        [s03\_20161003T161231Z\_pan\_d1\_000\_rpc.txt]
+        [s03\_20161003T161231Z\_pan\_d1\_0001.tif]
+      ]
+      [pansharp
+        [s03\_20161003T161231Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
+        [s03\_20161003T161231Z\_pansharp\_bgrn\_d1\_0001.tif]
+      ]
+    ]
+  ]
+\end{forest}
+
+\subsection{Geolocalisation}
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.95\textwidth]{d1.png}
+    \caption{Mosaic of d1. From left to right: 1Z, 7Z, 8Z}
+    \label{}
+\end{figure}
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.95\textwidth]{d2.png}
+    \caption{Mosaic of d2. From left to right: 1Z, 7Z, 8Z}
+    \label{}
+\end{figure}
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.95\textwidth]{d3.png}
+    \caption{Mosaic of d3. From left to right: 1Z, 7Z, 8Z}
+    \label{}
+\end{figure}
+
 
 \appendix
 
