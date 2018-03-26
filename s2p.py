@@ -702,7 +702,7 @@ def main(user_cfg, steps=ALL_STEPS):
     if 'local-pointing' in steps:
         print('correcting pointing locally...')
         parallel.launch_calls(pointing_correction, tiles_pairs, nb_workers)
-    exit(1)
+    # exit(1)
 
     if 'global-pointing' in steps:
         print('correcting pointing globally...')
@@ -713,7 +713,7 @@ def main(user_cfg, steps=ALL_STEPS):
         print('rectifying tiles...')
         parallel.launch_calls(rectification_pair, tiles_pairs, nb_workers)
 
-    exit(1)
+    # exit(1)
     if 'matching' in steps:
         print('running stereo matching...')
         parallel.launch_calls(stereo_matching, tiles_pairs, nb_workers)
