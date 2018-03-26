@@ -70,11 +70,13 @@ def pointing_correction(tile, i):
     # correct pointing error
     print('correcting pointing on tile {} {} pair {}...'.format(x, y, i))
     try:
-        if 'n_optim_variables' in cfg:
-            n_optim_variables = cfg['n_optim_variables']
+        if (('pointing_error_correction_method' in cfg) and ('pointing_error_correction_degree' in cfg)):
+            pec_degree = cfg['pointing_error_correction_degree']
+            pec_method = cfg['pointing_error_correction_method']
         else:
-            n_optim_variables = 0
-        A, m, F = pointing_accuracy.compute_correction(img1, rpc1, img2, rpc2, x, y, w, h, n_optim_variables)
+            pec_degree = 'analytic'
+            pec_method = 1
+        A, m, F = pointing_accuracy.compute_correction(img1, rpc1, img2, rpc2, x, y, w, h, pec_method, pec_degree)
     except common.RunFailure as e:
         stderr = os.path.join(out_dir, 'stderr.log')
         with open(stderr, 'w') as f:
@@ -700,6 +702,7 @@ def main(user_cfg, steps=ALL_STEPS):
     if 'local-pointing' in steps:
         print('correcting pointing locally...')
         parallel.launch_calls(pointing_correction, tiles_pairs, nb_workers)
+    exit(1)
 
     if 'global-pointing' in steps:
         print('correcting pointing globally...')
@@ -710,7 +713,7 @@ def main(user_cfg, steps=ALL_STEPS):
         print('rectifying tiles...')
         parallel.launch_calls(rectification_pair, tiles_pairs, nb_workers)
 
-    # exit(1)
+    exit(1)
     if 'matching' in steps:
         print('running stereo matching...')
         parallel.launch_calls(stereo_matching, tiles_pairs, nb_workers)
