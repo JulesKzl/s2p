@@ -8,6 +8,7 @@ iterate.dat
 testoutput
 .idea
 yaw_extension/output
+yaw_extension/opencv
 
 # 3rdparty #
 ############
