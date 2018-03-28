@@ -2,19 +2,19 @@
   "out_dir": "./output",
   "images": [
     {
-      "img": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d2_0011.tif",
-      "rpc": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d2_0011_rpc.txt"
+      "img": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d1_0002.tif",
+      "rpc": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d1_0002_rpc.txt"
     },
     {
-      "img": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d2_0011.tif",
-      "rpc": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d2_0011_rpc.txt"
+      "img": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d1_0002.tif",
+      "rpc": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d1_0002_rpc.txt"
     }
   ],
   "roi": {
-    "x": 0,
-    "y": 0,
-    "w": 1000,
-    "h": 1000
+    "x": 1300,
+    "y": 400,
+    "w": 500,
+    "h": 500
   },
   "full_img": false,
   "matching_algorithm": "mgm",
