@@ -298,11 +298,11 @@ def local_translation_rotation(r1, r2, x, y, w, h, m):
     ab = ab/np.linalg.norm(ab)
     print(ab)
     # Apply rectification on image 1
-    S1Fx1 = np.dot(S1, Fx1).T
-    print(S1Fx1[:10])
-    c1 = S1Fx1[:, 1]
-    S1Fx1_norm = S1Fx1/c1[:, np.newaxis]
-    print(S1Fx1_norm[:10])
+    S2Fx1 = np.dot(S2, Fx1).T
+    print(S2Fx1[:10])
+    c1 = S2Fx1[:, 1]
+    S2Fx1_norm = S2Fx1/c1[:, np.newaxis]
+    print(S2Fx1_norm[:10])
     # Apply rectification on image 2
     p2 = np.column_stack((m[:,2:4],np.ones((N,1))))
     S2p2 = np.dot(S2, np.transpose(p2)).T
@@ -311,7 +311,7 @@ def local_translation_rotation(r1, r2, x, y, w, h, m):
     # Variable of optimization problem
     A_ = np.ones((N,1))
     # A_ = np.column_stack((S2p2[:,0].reshape(N, 1),np.ones((N,1))))
-    b_ = S2p2[:, 1] - S1Fx1_norm[:, 2]
+    b_ = S2p2[:, 1] - S2Fx1_norm[:, 1]
     # b_ = S2p2[:, 1] - S1Fx1[:, 1]
 
     # min ||Ax + b||^2 => x = - (A^T A )^-1 A^T b
