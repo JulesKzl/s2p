@@ -36,7 +36,7 @@
 
  	\vspace{1.5cm}
  \end{center}
- 
+
  \tableofcontents
 
 \section{Attitude of a Satellite}
@@ -50,8 +50,8 @@
 
 \section{Satellite attitude error effects on stereo images}
 \label{sec:sensibility}
-What is pointing error ? 
-Sensiblity of roll, pitch and yaw. Scheme (roll and pitch depend of the height of the satellite whereas yaw only the angle) 
+What is pointing error ?
+Sensiblity of roll, pitch and yaw. Scheme (roll and pitch depend of the height of the satellite whereas yaw only the angle)
 
 
 \section{Correction of Relative Pointing Error}
@@ -165,7 +165,7 @@ We can write this optimization problem as :
 \begin{align*}
 X^* = \argmin{X} \| AX + b \|^2
 \end{align*}
-where 
+where
 \begin{align*}
 A =
 \begin{pmatrix}
@@ -192,9 +192,9 @@ The solution of this optimization problem is the solution of the normal equation
 \begin{align*}
  A^TAX = -A^Tb
 \end{align*}
-Here, 
+Here,
 \begin{align*}
-A^TA = 
+A^TA =
 \begin{pmatrix}
 \sum\limits_{i=1}^N x_{i}'^2 & \sum\limits_{i=1}^Nx_{i}' \\
 \sum\limits_{i=1}^N x_{i}' & N \\
@@ -215,7 +215,7 @@ To correct the pointing error in the rectified setting we find $R^*$ and $T^*$ m
     (R^*, T^*) = \argmin{R,T} \sum_{i=1}^N d(RT\bm{x_i'}, F\bm{x}_i)
 \end{align}
 
-Since we are not able to solve this optimization problem analytically, we solve it numerically thanks to the L-BFGS algorithm. As input are the correspondences on the images and the affine approximation matrix and the optimization algorithm outputs the optimal angle $\theta \in [0, 2\pi]$ corresponding to the error on the yaw and a translation $t \in \mathbb{R}$ corresponding to a translation in the normal direction w.r.t. the epipolar lines. 
+Since we are not able to solve this optimization problem analytically, we solve it numerically thanks to the L-BFGS algorithm. As input are the correspondences on the images and the affine approximation matrix and the optimization algorithm outputs the optimal angle $\theta \in [0, 2\pi]$ corresponding to the error on the yaw and a translation $t \in \mathbb{R}$ corresponding to a translation in the normal direction w.r.t. the epipolar lines.
 
 \paragraph{Limited-memory BFGS\\}
 Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton methods that approximates the BFGS algorithm using a limited amount of computer memory. In our case we do not need to compute the gradient analytically since the algorithm approximates it using finite difference. We use this algorithm as a black box to solve the minimization problem.
@@ -280,7 +280,7 @@ Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton m
 \begin{figure}
     \centering
     \includegraphics[width = 0.95\textwidth]{d1.png}
-    \caption{Mosaic of d1. From left to right: 1Z, 7Z, 8Z}
+    \caption{Mosaic of d1. From left to right: 1Z, 8Z, 7Z}
     \label{}
 \end{figure}
 
@@ -288,7 +288,7 @@ Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton m
 \begin{figure}
     \centering
     \includegraphics[width = 0.95\textwidth]{d2.png}
-    \caption{Mosaic of d2. From left to right: 1Z, 7Z, 8Z}
+    \caption{Mosaic of d2. From left to right: 1Z, 8Z, 7Z}
     \label{}
 \end{figure}
 
@@ -296,7 +296,7 @@ Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton m
 \begin{figure}
     \centering
     \includegraphics[width = 0.95\textwidth]{d3.png}
-    \caption{Mosaic of d3. From left to right: 1Z, 7Z, 8Z}
+    \caption{Mosaic of d3. From left to right: 1Z, 8Z, 7Z}
     \label{}
 \end{figure}
 
