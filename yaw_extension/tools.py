@@ -222,6 +222,10 @@ def geolocalisation(trace):
 
     return footprint
 
+def workaround_json_int64(o):
+    if isinstance(o,np.integer) : return int(o)
+    raise TypeError
+
 def write_json(duet, roi=None):
     """
     duet = triplets['d1']['0001'][:2]
