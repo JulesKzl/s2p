@@ -218,3 +218,5 @@ def geolocalisation(trace):
 
     m.center = footprint[0]['coordinates'][0][0][::-1]
     display(m)
+
+    return footprint
