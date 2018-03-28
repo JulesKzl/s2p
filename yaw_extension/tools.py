@@ -1,6 +1,7 @@
 import numpy as np
 from glob import glob
 from tqdm import tqdm
+import json
 from ipytools import readGTIFF
 from ipytools import writeGTIFF
 from ipytools import readGTIFFmeta
@@ -220,3 +221,28 @@ def geolocalisation(trace):
     display(m)
 
     return footprint
+
+def write_json(duet, roi=None):
+    """
+    duet = triplets['d1']['0001'][:2]
+    """
+    # Get current config file
+    with open('config.json', 'r') as f:
+        user_cfg = json.load(f)
+    user_cfg['out_dir'] = './output'
+    # Config path of images and RPC
+    user_cfg['images'] = [
+        {
+            "img": duet[i],
+            "rpc": duet[i].replace(".tif", "_rpc.txt")
+        }
+        for i in range(len(duet))]
+    # Config ROI
+    if (roi == None):
+        user_cfg["full_img"] = True
+    else:
+        user_cfg["full_img"] = False
+        user_cfg["roi"] = roi
+    # Modify config file
+    with open('config.json', 'w') as f:
+        json.dump(user_cfg, f, indent=2, default=workaround_json_int64)
