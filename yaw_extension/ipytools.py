@@ -30,11 +30,11 @@ def clickablemap(center = [48.790153, 2.327395], zoom = 13,
  #   %matplotlib notebook
 
 
-    # google tileserver 
-    # https://stackoverflow.com/questions/9394190/leaflet-map-api-with-google-satellite-layer 
+    # google tileserver
+    # https://stackoverflow.com/questions/9394190/leaflet-map-api-with-google-satellite-layer
     mosaicsTilesURL = 'https://mt1.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}' # Hybrid: s,h; Satellite: s; Streets: m; Terrain: p;
 
-    # Map Settings 
+    # Map Settings
     # Define colors
     colors = {'blue': "#009da5"}
     # Define initial map center lat/long
@@ -43,16 +43,16 @@ def clickablemap(center = [48.790153, 2.327395], zoom = 13,
     #zoom = 13
     # Create the map
     m = Map(
-        center = center, 
+        center = center,
         zoom = zoom,
         scroll_wheel_zoom = True,
-        default_tiles = TileLayer(url=mosaicsTilesURL), # using custom basemap 
+        default_tiles = TileLayer(url=mosaicsTilesURL), # using custom basemap
         layout = layout
     )
 
     # Define the draw tool type options
     polygon = {'shapeOptions': {'color': colors['blue']}}
-    rectangle = {'shapeOptions': {'color': colors['blue']}} 
+    rectangle = {'shapeOptions': {'color': colors['blue']}}
 
     ## Create the draw controls
     ## @see https://github.com/ellisonbg/ipyleaflet/blob/master/ipyleaflet/leaflet.py#L293
@@ -60,18 +60,18 @@ def clickablemap(center = [48.790153, 2.327395], zoom = 13,
     #    polygon = polygon,
     #    rectangle = rectangle
     #)
-    dc = DrawControl(polygon={'shapeOptions': {'color': '#0000FF'}}, 
+    dc = DrawControl(polygon={'shapeOptions': {'color': '#0000FF'}},
                      polyline={'shapeOptions': {'color': '#0000FF'}},
                      circle={'shapeOptions': {'color': '#0000FF'}},
                      rectangle={'shapeOptions': {'color': '#0000FF'}},
                      )
-    
-    
+
+
     # Initialize an action counter variable
     m.actionCount = 0
     m.AOIs = []
 
-    
+
     # Register the draw controls handler
     def handle_draw(self, action, geo_json):
         # Increment the action counter
@@ -87,15 +87,15 @@ def clickablemap(center = [48.790153, 2.327395], zoom = 13,
     # Attach the draw handler to the draw controls `on_draw` event
     dc.on_draw(handle_draw)
     m.add_control(dc)
-    
-    # add a custom function to create and add a Rectangle layer 
+
+    # add a custom function to create and add a Rectangle layer
     # (LESS USEFUL THAN add_geojson)
     def add_rect(*args, **kwargs):
         r = Rectangle( *args, **kwargs)
         return m.add_layer(r)
-    m.add_rectangle = add_rect 
-    
-    # add a custom function to create and add a Polygon layer 
+    m.add_rectangle = add_rect
+
+    # add a custom function to create and add a Polygon layer
     def add_geojson(*args, **kwargs):
         # ugly workaround to call without data=aoi
         if 'data' not in kwargs:
@@ -106,48 +106,51 @@ def clickablemap(center = [48.790153, 2.327395], zoom = 13,
 
         r = GeoJSON( *args2, **kwargs)
         return m.add_layer(r)
-    m.add_GeoJSON = add_geojson 
-    
+    m.add_GeoJSON = add_geojson
+
     # Display
     return m
 
 
-def overlaymap(aoiY, imagesurls, zoom = 13,
+def overlaymap(aoiY, imagesurls, zoom = 13, m = None,
                layout = ipywidgets.Layout(width='100%', height='500px') ):
-    
+
     import os
     import json
     import numpy as np
-    
+
     from ipyleaflet import (
         Map,
         Rectangle,
         Polygon,
         TileLayer, ImageOverlay,
-        DrawControl, 
+        DrawControl,
     )
 
     ## handle the case of imageurls not a list
     if type(imagesurls) != list:
         imagesurls = [imagesurls]
-        
+
     number_of_images = len(imagesurls)
-    
+
     ## handle both kinds of calls with aoi, or aoi['coordinates']
     if 'coordinates' in aoiY:
         aoiY=aoiY['coordinates'][0]
-        
-        
-    # create the Map object    
-    # google tileserver 
-    # https://stackoverflow.com/questions/9394190/leaflet-map-api-with-google-satellite-layer 
+
+
+    # create the Map object
+    # google tileserver
+    # https://stackoverflow.com/questions/9394190/leaflet-map-api-with-google-satellite-layer
     mosaicsTilesURL = 'https://mt1.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}' # Hybrid: s,h; Satellite: s; Streets: m; Terrain: p;
-    m = Map( center = aoiY[0][::-1] , 
-            zoom = zoom,
-            scroll_wheel_zoom = True,
-            default_tiles = TileLayer(url=mosaicsTilesURL, opacity=1.00),  # use custom tiles
-            layout = layout,
-       )
+    if m == None:
+        m = Map( center = aoiY[0][::-1] ,
+                zoom = zoom,
+                scroll_wheel_zoom = True,
+                default_tiles = TileLayer(url=mosaicsTilesURL, opacity=1.00),  # use custom tiles
+                layout = layout,
+           )
+    else:
+        m = m
 
     #vlayer = VideoOverlay(videoUrl, videoBounds )
     #m.add_layer(vlayer)
@@ -167,17 +170,17 @@ def overlaymap(aoiY, imagesurls, zoom = 13,
     from ipywidgets import interact, interactive, fixed, interact_manual
     import ipywidgets as widgets
 
-    
-    # meke sure that the images have unique names 
-    imagesurls =  ['%s?%05d'%(i,np.random.randint(10000)) for i in imagesurls] 
 
-    
+    # meke sure that the images have unique names
+    imagesurls =  ['%s?%05d'%(i,np.random.randint(10000)) for i in imagesurls]
+
+
     # draw bounding polygon
     y = [ a[::-1] for a in aoiY ]
     p = Polygon(locations=y, weight=2, fill_opacity=0.25)
     m.add_layer(p)
 
-    # create image 
+    # create image
     layer = ImageOverlay(url='%s'%(imagesurls[0]), bounds=[ list(np.max(aoiY,axis=0)[::-1]) , list(np.min(aoiY,axis=0)[::-1]) ])
 
     m.add_layer(layer)
@@ -189,16 +192,16 @@ def overlaymap(aoiY, imagesurls, zoom = 13,
    #             layer.url='%s'%(imagesurls[i])
    #             layer.visible = False
    #             layer.visible = True
-    
-   #    ALTERNATIVE:  add a new layer 
+
+   #    ALTERNATIVE:  add a new layer
                 layer = ImageOverlay(url='%s'%(imagesurls[i]), bounds=[ list(np.max(aoiY,axis=0)[::-1]) , list(np.min(aoiY,axis=0)[::-1]) ])
                 m.add_layer(layer)
-                # remove old ones 
-                if len(m.layers)>30: # image buffer 
+                # remove old ones
+                if len(m.layers)>30: # image buffer
                     for l in (m.layers[1:-1]):
                         m.remove_layer(l)
-    
-    
+
+
     # build the UI
     #interact(showim,i=len(imagesurls)-1)
         #interact(showim, i=widgets.IntSlider(min=0,max=len(imagesurls),step=1,value=0));
@@ -214,7 +217,7 @@ def overlaymap(aoiY, imagesurls, zoom = 13,
     slider = widgets.IntSlider( min=0, max=len(imagesurls)-1, description='Frame:')
     label  = widgets.Label(value="")
     def on_value_change(change):
-        label.value=imagesurls[change['new']] 
+        label.value=imagesurls[change['new']]
         showim(change['new'])
     slider.observe(on_value_change, 'value')
     b1 = widgets.Button(description='fw', layout=widgets.Layout(width='auto') )
@@ -240,8 +243,8 @@ def overlaymap(aoiY, imagesurls, zoom = 13,
     b3.on_click( clickhide )
     b4.on_click( clickhidePoly )
 
-    
-    # add a custom function to create and add a Polygon layer 
+
+    # add a custom function to create and add a Polygon layer
     def add_geojson(*args, **kwargs):
         # ugly workaround to call without data=aoi
         if 'data' not in kwargs:
@@ -252,16 +255,16 @@ def overlaymap(aoiY, imagesurls, zoom = 13,
 
         r = GeoJSON( *args2, **kwargs)
         return m.add_layer(r)
-    m.add_GeoJSON = add_geojson 
-    
+    m.add_GeoJSON = add_geojson
+
 
     widgets.jslink((play, 'value'), (slider, 'value'))
     if number_of_images>1:
         return widgets.VBox([widgets.HBox([play,b2,b1,b3,b4, slider,label]),m])
     else:
-        return widgets.VBox([widgets.HBox([b3,b4, label]),m])        
+        return widgets.VBox([widgets.HBox([b3,b4, label]),m])
     #interactive(showim, i=slider   )
-       
+
 
 def geojson_lonlat_to_utm(aoi):
     """
@@ -286,16 +289,16 @@ def printmd(string):
     from IPython.display import Markdown, display
     display(Markdown(string))
 
-    
+
 def printbf(obj):
     printmd("__"+str(obj)+"__")
 
-    
+
 def show_array(a, fmt='jpeg'):
-    ''' 
+    '''
     display a numpy array as an image
     supports monochrome (shape = (N,M,1) or (N,M))
-    and color arrays (N,M,3)  
+    and color arrays (N,M,3)
     '''
     import PIL.Image
     from io import BytesIO
@@ -313,18 +316,18 @@ def display_image(img):
     img can be an url, a local path, or a numpy array
     '''
     from IPython.display import display, Image
-    from urllib import parse   
+    from urllib import parse
     import numpy as np
-    
+
     if type(img) == np.ndarray:
         x = np.squeeze(img).copy()
         show_array(x)
     elif parse.urlparse(img).scheme in ('http', 'https', 'ftp'):
-        display(Image(url=img)) 
+        display(Image(url=img))
     else:
-        display(Image(filename=img)) 
-        
-        
+        display(Image(filename=img))
+
+
 def display_imshow(im,
                    range=None,
                    cmap='gray',
@@ -364,8 +367,8 @@ def display_imshow(im,
     # Only show ticks on the left and bottom spines
     ax.yaxis.set_ticks_position('left')
     ax.xaxis.set_ticks_position('bottom')
-    plt.show() 
-        
+    plt.show()
+
 
 def display_table(table):
     import pandas as pd   # display tables
@@ -374,10 +377,10 @@ def display_table(table):
 
 
 def urlencoded_jpeg_img(a):
-    ''' 
+    '''
     returns the string of an html img tag with the urlencoded jpeg of 'a'
     supports monochrome (shape = (N,M,1) or (N,M))
-    and color arrays (N,M,3)  
+    and color arrays (N,M,3)
     '''
     fmt='jpeg'
     import PIL.Image
@@ -390,10 +393,10 @@ def urlencoded_jpeg_img(a):
     x =  base64.b64encode(f.getvalue())
     return '''<img src="data:image/jpeg;base64,{}&#10;"/>'''.format(x.decode())
     # display using IPython.display.HTML(retval)
-    
-       
+
+
 ### initialize gallery
-        
+
 gallery_style_base = """
     <style>
 .gallery2 {
@@ -437,17 +440,17 @@ gallery_style_base = """
 </style>
     """
 
-  
+
 def display_gallery(image_urls, image_labels=None):
     '''
-    image_urls can be a list of urls 
+    image_urls can be a list of urls
     or a list of numpy arrays
     image_labels is a list of strings
     '''
-    from  IPython.display import HTML  
+    from  IPython.display import HTML
     import numpy as np
 
-    
+
     gallery_template = """
     <div class="gallery2">
         <ul class="index">
@@ -455,7 +458,7 @@ def display_gallery(image_urls, image_labels=None):
         </ul>
     </div>
     """
-    
+
     li_template = """<li><a href="#">{}<span style="background-color: white;  " ><img src="{}" />{}</span></a></li>"""
     li_template_encoded = """<li><a href="#">{}<span style="background-color: white;  " >{}{}</span></a></li>"""
 
@@ -472,19 +475,19 @@ def display_gallery(image_urls, image_labels=None):
             li = li + li_template_encoded.format( idx, urlencoded_jpeg_img(u), label)
 
         idx = idx + 1
-        
+
     source = gallery_template.format(li)
-    
+
     display(HTML( source ))
     display(HTML( gallery_style_base ))
 
-    return 
-    
+    return
+
 
 ### READ AND WRITE IMAGES
-    
-    
-    
+
+
+
 
 import rasterio
 import warnings
@@ -502,37 +505,37 @@ def rio_open(p):
     with warnings.catch_warnings():  # noisy warning may occur here
         warnings.filterwarnings("ignore",
                                 category=UserWarning)
-        return rasterio.open(p)    
-    
+        return rasterio.open(p)
 
-    
+
+
 def readGTIFF(fname):
     '''
-    Reads an image file into a numpy array, 
-    returns the numpy array with dimensios (height, width, channels) 
-    The returned numpy array is always of type numpy.float 
+    Reads an image file into a numpy array,
+    returns the numpy array with dimensios (height, width, channels)
+    The returned numpy array is always of type numpy.float
     '''
     import rasterio
     import numpy as np
     # TODO: suppress verbose warnings
-    # read the image into a np.array 
+    # read the image into a np.array
     with  rio_open(fname) as s:
         # print('reading image of size: %s'%str(im.shape))
         im = s.read()
     return im.transpose([1,2,0]).astype(np.float)
 
-  
+
 def readGTIFFmeta(fname):
     '''
     Reads the image GeoTIFF metadata using rasterio and returns it,
     along with the bounding box, in a tuple: (meta, bounds)
     if the file format doesn't support metadata the returned metadata is invalid
-    This is the metadata rasterio was capable to interpret, 
-    but the ultimate command for reading metadata is *gdalinfo* 
+    This is the metadata rasterio was capable to interpret,
+    but the ultimate command for reading metadata is *gdalinfo*
     '''
     import rasterio
     import numpy as np
-    # read the image into a np.array 
+    # read the image into a np.array
     with  rio_open(fname) as s:
         ## interesting information
         # print(s.crs,s.meta,s.bounds)
@@ -555,8 +558,8 @@ def writeGTIFF(im, fname, copy_metadata_from=None):
     '''
     Writes a numpy array to a GeoTIFF, PNG, or JPEG image depending on fname extension.
     For GeoTIFF files the metadata can be copied from another file.
-    Note that if  im  and  copy_metadata_from have different size, 
-    the copied geolocation properties are not adapted. 
+    Note that if  im  and  copy_metadata_from have different size,
+    the copied geolocation properties are not adapted.
     '''
     import rasterio
     import numpy as np
@@ -564,31 +567,31 @@ def writeGTIFF(im, fname, copy_metadata_from=None):
     # set default metadata profile
     p = {'width': 0, 'height': 0, 'count': 1, 'dtype': 'uint8', 'driver': 'PNG',
              'affine': rasterio.Affine (0,1,0,0,1,0),
-             'crs': rasterio.crs.CRS({'init': 'epsg:32610'}), 
+             'crs': rasterio.crs.CRS({'init': 'epsg:32610'}),
              'tiled': False,  'nodata': None}
-    
-    # read and update input metadata if available 
-    if copy_metadata_from:   
+
+    # read and update input metadata if available
+    if copy_metadata_from:
         x = rio_open(copy_metadata_from)
-        p.update( x.profile )    
- 
-    # format input 
-    if  len(im.shape) == 2: 
+        p.update( x.profile )
+
+    # format input
+    if  len(im.shape) == 2:
         im = im[:,:,np.newaxis]
-        
+
     # override driver and shape
     indriver = get_driver_from_extension(fname)
     if indriver and (indriver != p['driver']):
         print('writeGTIFF: driver override from %s to %s'%( p['driver'], indriver))
         p['driver'] = indriver or p['driver']
-    
+
     if indriver == 'GTiff' and (p['height'] != im.shape[0]  or  p['width'] != im.shape[1]):
         # this is a problem only for GTiff
         print('writeGTIFF: changing the size of the GeoTIFF')
-    else:     
-        # remove useless properties 
+    else:
+        # remove useless properties
         p.pop('tiled')
-    
+
     p['height'] = im.shape[0]
     p['width']  = im.shape[1]
     p['count']  = im.shape[2]
@@ -599,7 +602,7 @@ def writeGTIFF(im, fname, copy_metadata_from=None):
 
 def overprintText(im,imout,text,textRGBA=(255,255,255,255)):
     '''
-    prints text in the upper left corner of im (filename) 
+    prints text in the upper left corner of im (filename)
     and writes imout (filename)
     '''
     from PIL import Image, ImageDraw, ImageFont
@@ -623,7 +626,7 @@ def overprintText(im,imout,text,textRGBA=(255,255,255,255)):
 
 def epsgcode_to_utmcode(epsgcode):
     # https://gis.stackexchange.com/questions/20298/is-it-possible-to-get-the-epsg-value-from-an-osr-spatialreference-class-using-th
-    # returns the UTM zone, and a boolean northen 
+    # returns the UTM zone, and a boolean northen
     from osgeo import gdal,osr
     import re
     srs = osr.SpatialReference()
@@ -639,11 +642,11 @@ def epsgcode_to_utmcode(epsgcode):
 
 #### wrappers for gdaltransform and gdalwarp
 
-       
+
 def gdal_get_longlat_of_pixel(fname, x, y, verbose=True):
     '''
-    returns the longitude latitude and altitude (wrt the WGS84 reference 
-    ellipsoid) for the points at pixel coordinates (x, y) of the image fname. 
+    returns the longitude latitude and altitude (wrt the WGS84 reference
+    ellipsoid) for the points at pixel coordinates (x, y) of the image fname.
     The CRS of the input GeoTIFF is determined from the metadata in the file.
 
     '''
@@ -653,8 +656,8 @@ def gdal_get_longlat_of_pixel(fname, x, y, verbose=True):
     q = b''
     for (xi,yi) in zip(x,y):
         q = q + b'%d %d\n'%(xi,yi)
-    # call gdaltransform, "+proj=longlat" uses the WGS84 ellipsoid 
-    #    echo '0 0' | gdaltransform -t_srs "+proj=longlat" inputimage.tif 
+    # call gdaltransform, "+proj=longlat" uses the WGS84 ellipsoid
+    #    echo '0 0' | gdaltransform -t_srs "+proj=longlat" inputimage.tif
     cmdlist = ['gdaltransform', '-t_srs', "+proj=longlat", fname]
     if verbose:
         print ('RUN: ' +  ' '.join(cmdlist) + ' [x y from stdin]')
@@ -671,7 +674,7 @@ def gdal_resample_image_to_longlat(fname, outfname, verbose=True):
     and saves the result in outfname
     '''
     import os
-    
+
     driver = get_driver_from_extension(outfname)
     cmd = 'gdalwarp -overwrite  -of %s -t_srs "+proj=longlat +datum=WGS84" %s %s'%(driver, fname, outfname)
     if verbose:
@@ -699,7 +702,7 @@ def display_RSO(img, title = None, cbar = False, plot = True):
     new = 255 * (new - new.min()) / (new.max() - new.min())
     if plot == True:
         display_imshow(new, title = title, cbar = cbar)
-    return new
+    return new.astype(np.uint8)
 
 def simple_equalization_8bit(im, percentiles=5):
     ''' im is a numpy array
