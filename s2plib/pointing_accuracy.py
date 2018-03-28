@@ -276,57 +276,71 @@ def local_translation_rotation(r1, r2, x, y, w, h, m):
     F = estimation.affine_fundamental_matrix(rpc_matches)
 
     # Compute rectification homographies
-    S1, S2 = estimation.rectifying_similarities_from_affine_fundamental_matrix(F, cfg['debug'])
+    # S1, S2 = estimation.rectifying_similarities_from_affine_fundamental_matrix(F, cfg['debug'])
     hmargin = cfg['horizontal_margin']
     vmargin = cfg['vertical_margin']
-    H1, H2, F_rect = rectification.rectification_homographies(rpc_matches, x, y, w, h, hmargin, vmargin)
+    S1, S2, F_rect = rectification.rectification_homographies(rpc_matches, x, y, w, h, hmargin, vmargin)
 
-    # compute horizontal epipolar lines
     N = len(m)
-    p1 = np.column_stack((m[:,0:2],np.ones((N,1))))
-    Sp1 = np.dot(S1, np.transpose(p1))
-    FSp1 = np.dot(F_rect, Sp1).T
-    print(FSp1[:10])
-    Hp1 = np.dot(H1, np.transpose(p1))
-    FHp1 = np.dot(F_rect, Hp1).T
-    print(FHp1[:10])
-    Fx1 = np.dot(F_rect, np.transpose(p1))
-    Fx1T = Fx1.T
-    print(Fx1T[:10])
-    # Compute normal vector to epipolar liness
-    ab = np.array([Fx1T[0, 0], Fx1T[0, 1]])
-    ab = ab/np.linalg.norm(ab)
-    print(ab)
     # Apply rectification on image 1
-    S2Fx1 = np.dot(S2, Fx1).T
-    print(S2Fx1[:10])
-    c1 = S2Fx1[:, 1]
-    S2Fx1_norm = S2Fx1/c1[:, np.newaxis]
-    print(S2Fx1_norm[:10])
+    S1p1 = common.points_apply_homography(S1, m[:,0:2])
+    S1p1 = np.column_stack((S1p1,np.ones((N,1))))
+    print("Points 1 rectied")
+    print(S1p1[:10])
     # Apply rectification on image 2
-    p2 = np.column_stack((m[:,2:4],np.ones((N,1))))
-    S2p2 = np.dot(S2, np.transpose(p2)).T
+    S2p2 = common.points_apply_homography(S1, m[:,2:4])
+    S2p2 = np.column_stack((S2p2, np.ones((N,1))))
+    print("Points 2 rectied")
+    print(S2p2[:10])
+
+    # Compute F in the rectified space
+    rect_matches = np.column_stack((S1p1[:,0:2], S2p2[:, 0:2]))
+    F_rect2 = estimation.affine_fundamental_matrix(rect_matches)
+
+    # Compute epipolar lines
+    FS1p1 = np.dot(F_rect2, S1p1.T).T
+    print(FS1p1[:10])
+
+    # Normalize epipolar lines
+    c1 = -FS1p1[:, 1]
+    FS1p1_norm = FS1p1/c1[:, np.newaxis]
+    print(FS1p1_norm[:10])
 
 
     # Variable of optimization problem
     A_ = np.ones((N,1))
     # A_ = np.column_stack((S2p2[:,0].reshape(N, 1),np.ones((N,1))))
-    b_ = S2p2[:, 1] - S2Fx1_norm[:, 1]
-    # b_ = S2p2[:, 1] - S1Fx1[:, 1]
+    # b_ = S2p2[:, 1] - FS1p1_norm[:, 2]
+    b_ = S2p2[:, 1] - S1p1[:, 1]
+    t_med = np.median(b_)
+    print(t_med)
+
+    t_med2 = np.sort(b_)[int(N/2)]
+    print("t_med2", t_med2)
 
     # min ||Ax + b||^2 => x = - (A^T A )^-1 A^T b
-    X_ = - np.dot(np.linalg.inv(np.dot(A_.T, A_)), np.dot(A_.T, b_))
-    print(X_)
+    # X_ = - np.dot(np.linalg.inv(np.dot(A_.T, A_)), np.dot(A_.T, b_))
     # [theta, t] = X_
     # print(t, theta)
-    t = X_[0]
+    # t = X_[0]
+
+    # Compute epipolar lines witout recitifcation
+    p1 = np.column_stack((m[:,0:2],np.ones((N,1))))
+    Fp1 = np.dot(F, p1.T).T
+
+    # Compute normal vector to epipolar liness
+    ab = np.array([Fp1[0][0], Fp1[0][1]])
+    ab = ab/np.linalg.norm(ab)
+
+    tx = t_med*ab[0]
+    ty = t_med*ab[1]
+    print(tx, ty)
 
     # Get translation in not rectified image
-    T = np.array([0, t, 1])
-    S2_inv = np.linalg.inv(S2)
-    T = np.dot(S2_inv, T)
-    [tx, ty, _] = T
-    print(tx, ty)
+    T = common.matrix_translation(0, -t_med)
+    T = np.linalg.inv(S2).dot(T).dot(S2)
+    # T = np.dot(S2_inv, T)
+    print(T)
 
     theta = 0
     cos_theta = np.cos(theta)
