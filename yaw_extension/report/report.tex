@@ -111,7 +111,7 @@ which can be approximated, using the affine fundamental matrix $F$, to:
 \end{align*}
 
 \subsection{Attitude of a Satellite}
-The attitude of a satellite refers to the orientation of a three-dimensional coordinate system linked to the satellite with respect to another coordinate system (Earth for example). 
+The attitude of a satellite refers to the orientation of a three-dimensional coordinate system linked to the satellite with respect to another coordinate system (Earth for example).
 We define the roll, pitch and yaw angles as in Figure \ref{angles}.
 
 \begin{figure}[h]
@@ -496,8 +496,8 @@ The geolocalisation have been done using the rpc model, with a reprojection alti
 Unfortunately, we did not test the analytical way of correcting the pointing error with translation and rotation due to the time constraint of the project and code issues.
 
  \subsubsection{Testdata (Pléiades)}
- We first try our modified pipeline with improved pointing error correction on Pléiades images (see Figure \ref{fig:testdata}) from the \verb|s2p| Github repositroy. These images are located on the island of Reunion. We can observe on Figure \ref{fig_geoloc_testdata} the error of the RPC function of the two images.\\
- 
+ We first try our modified pipeline with improved pointing error correction on Pléiades images (see Figure \ref{fig:testdata}) from the \verb|s2p| Github repository. These images are located on the island of Reunion. We can observe on Figure \ref{fig_geoloc_testdata} the error of the RPC function of the two images.\\
+
             \begin{figure}[H]
             \centering
             \begin{subfigure}[b]{0.5\linewidth}
@@ -530,11 +530,11 @@ Unfortunately, we did not test the analytical way of correcting the pointing err
             \caption{Results of pointing error correction on Pléiades images}
              \label{tab:testdata-res}
           \end{table}
-         
-            
+
+
  \subsubsection{Vidéo SkySat}
              We then try our modified pipeline with improved pointing error correction on two images from the Skysat videos (see Figure \ref{fig:video}) from Planet's data. The video were shot on an harbor in Australia. We can see on Figure \ref{fig_trace_video} the error of the RPC function of all the images of the video.\\
-             
+
             \begin{figure}[H]
             \centering
             \begin{subfigure}[b]{0.8\linewidth}
@@ -547,10 +547,10 @@ Unfortunately, we did not test the analytical way of correcting the pointing err
            \caption{First and $100$-th images of a SkySat video.}
            \label{fig:video}
           \end{figure}
-        
-          
+
+
 Results from the different methods are compiled in Table \ref{tab:video-res}. The images were divided into $3$ tiles of $1000 \times 1000$ pixels.
-          
+
 \begin{table}[h]
 \centering
              \begin{tabular}{|r||c|c|c|}
@@ -568,8 +568,8 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
             \end{tabular}
                  \caption{Results of pointing error correction on images from the Skysat's video.}
              \label{tab:video-res}
-          \end{table}      
-            
+          \end{table}
+
 \subsubsection{Triplet SkySat}
              We then try our modified pipeline with improved pointing error correction on two images from the Skysat triplets (see Figure \ref{fig:triplet}) from Planet's data. The images are taken in the USA. %We can see on Figure \ref{fig:video-location} the error of the RPC function of all the images of the video.\\
 
@@ -585,10 +585,10 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
  \caption{Two images from SkySat triplets.}
            \label{fig:triplet}
           \end{figure}
-         
-        
-    Results from the different methods are compiled in Table \ref{tab:triplet-res}. The images were divided into $3$ tiles of $1000 \times 1000$ pixels.    
-        
+
+
+    Results from the different methods are compiled in Table \ref{tab:triplet-res}. The images were divided into $3$ tiles of $1000 \times 1000$ pixels.
+
         \begin{table}[h]
 \centering
              \begin{tabular}{|r||c|c|c|}
@@ -606,17 +606,17 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
             \end{tabular}
                             \caption{Results of pointing error correction on images from the Skysat's triplets.}
              \label{tab:triplet-res}
-          \end{table}      
-            
+          \end{table}
+
      \subsubsection{Results analysis}
-     
+
 We can see that, for all the data, the numerical solutions for the translation are both very close to the analytic solution for the translation (median). For the correction with the rotation and translation, results are quite ambiguous. In fact, wheras the correction with two degree of freedom $(5)$ are always better than the one with only one $(4)$, the correction it-self is sometimes better than the translation only and sometimes a lot worse. For example, on the images from the videos, $(4)$ and $(5)$ are better on tile $1$ but worse on tile $3$.
 
 \section{Conclusion and future work}
 
 \subsection{Conclusion}
 We propose in this report different ways in order to correct the pointing error which is the consequence of incertitudes in the RPC functions. The pointing error correction is crucial in the \verb|s2p| pipeline as a preprocess for the rectification of the images before triangulation. The methods which were shown here do not seem to improve the performance of the pipeline on Planet's data.\\
-Through our tests using s2p, we remarked that the SIFT step were very important for all the next step of the pipeline. In fact without good corrrespondences or not enough, the pipeline were not able to rectify properly the images. 
+Through our tests using s2p, we remarked that the SIFT step were very important for all the next step of the pipeline. In fact without good corrrespondences or not enough, the pipeline were not able to rectify properly the images.
 \subsection{Future work}
 First more information about the error range of the satellite could be usefull in order to know in which range we have to correct the yaw rotation error. Another idea will be to use ASIFT in the pipeline to be sure that we have enough pipeline. Finally, the numeric optimizer seemed to have decent performance and we could use normalization or other degree of freedom to find better pointing error correction.
 
