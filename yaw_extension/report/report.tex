@@ -42,8 +42,8 @@
 
 \section{Satellite imagery}
 \subsection{Localization and projection functions}
-We define here the localization and projection functions  allow converting from image coordinates to coordinates
-on the globe and back (See Figure \ref{rpc}).
+We define here the localization and projection functions which allow to convert image coordinates to coordinates
+on the globe and back (See Figure \ref{rpc}).\\
 
 
 The projection function returns the image coordinates, in pixels, of a given 3-space
@@ -52,9 +52,9 @@ point.
 P:&\; \mathbb{R}^3\to\mathbb{R}^2\\
 &(\lambda, \theta, h) \mapsto \textbf{x}
 \end{align*}
-In that system a point of 3-space is identified by its
+In that system, a point of 3-space is identified by its
 longitude $\lambda\in[-180,180]$, latitude $\theta\in[-90,90]$ and
-altitude $h$, in meters, above the reference ellipsoid.
+altitude $h$, in meters, above the reference ellipsoid.\\
 
 
 The localization function is its
@@ -65,7 +65,7 @@ $\textbf{X} = (\lambda, \theta, h)$ whose altitude is $h$ and whose image is $\t
 \begin{align*}
 L:&\; \mathbb{R}^3\to\mathbb{R}^2\\
 &(\textbf{x}, h) \mapsto (\lambda, \theta)
-\end{align*}
+\end{align*}\\
 
 
 
@@ -82,25 +82,25 @@ polynomials.
 \end{figure}
 
 \subsection{Epipolar curves}
-For a point $\textbf{x}$ in the image $u$, the epipolar is the curve pararametrized by the alitude $h$ and defined as:
+For a point $\textbf{x}$ in the image $u$, the epipolar curve is the curve pararametrized by the alitude $h$ and defined as:
 \begin{align*}
-\text{epi}_{uv}^{x} : h \rightarrow \text{RPC}_u(\text{RPC}^{-1}_v(\textbf{x}, h))
+\text{epi}_{uv}^{\textbf{x}} : h \rightarrow \text{RPC}_u(\text{RPC}^{-1}_v(\textbf{x}, h))
 \end{align*}
 where RPC and RPC$^{-1}$ are the projection and localization functions. In pratice we observe this curve as straight parallel lines.
 
 \subsection{Affine fundamental matrix approximation}
-From  \cite{de2014automatic}, we know that, for each correspondence $i$, the epipolar curve $\text{epi}^{\textbf{x}_i}_{u v}(R)$ is approximated up to $0.05$ pixels by the straight line $F\textbf{x}_i$, where $F$ is
-the affine fundamental matrix between the two views for the considered tile. Since the fundamental matrix, due to the approximation, is \textit{affine}, all the lines $(F\textbf{x}_i)_{i=1...N}$ are parallel.
+From  \cite{carlo_2014_pushbroom}, we know that, for each point $\textbf{x}_i$, the epipolar curve $\text{epi}^{\textbf{x}_i}_{u v}(R)$ is approximated up to $0.05$ pixels by the straight line $F\textbf{x}_i$, where $F$ is
+the affine fundamental matrix between the two views. Since the fundamental matrix, due to the approximation, is \textit{affine}, all the lines $(F\textbf{x}_i)_{i=1...N}$ are parallel.
 
 \section{Satellite attitude error effects on stereo images}
 \subsection{Pointing error}
 However, due to the limited precision of the
-camera calibration, there is a bias of a few pixels in the RPC functions.
+camera calibration, there can be a bias of a few pixels in the RPC functions.
 For stereo matching, we can not ignore this error since the epipolar constraints are derived from
 the parameters of the cameras.
 Therefore this bias has to be corrected before applying rectification.\\
 
-This error, often of the order of a few pixels, is the sum, for all correspondences, of the distance between a correspondance on an image and the epipolar curve on the same image computed with the correspondance on the other image.
+This error, often of the order of a few pixels, is the sum, for all correspondences $(\textbf{x}_i, \textbf{x}'_i)_{i=1...N}$, of the distance between the point $\textbf{x}'_i$ on the left image and the epipolar curve on the left image, computed from the correspondance $\textbf{x}_i$ of the right image.
 Formally, given two images $u, v$ and a set of correspondences $(\textbf{x}_i, \textbf{x}'_i)_{i=1...N}$ , the pointing error between $u$ and $v$ is defined by:
 \begin{align*}
 \dfrac{1}{N} \sum\limits_{i=1}^{N} d(\textbf{x}_i', \text{epi}_{uv}^{\textbf{x}_i})
@@ -306,7 +306,7 @@ Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton m
 
 \subsection{Test data}
 
-S2P pipeline comes with a pair and a triplet of test data captured by Pleiades. The input pair and their geolocalisation is shown below in figure~\ref{fig_geoloc_testdata}. After the pair, the triplet is also represented in figure~\ref{fig_geoloc_testdata_triplet}. The expected output result is also shown in figure~\ref{fig_expected_output_pair} for the pair, and is offline visuable using the PotreeConverter module available on github~\cite{PotreeConverter}.
+S2P pipeline comes with a pair and a triplet of test data captured by Pleiades. The input pair and their geolocalisation is shown below in Figure~\ref{fig_geoloc_testdata}. After the pair, the triplet is also represented in Figure~\ref{fig_geoloc_testdata_triplet}. The expected output result is also shown in Figure~\ref{fig_expected_output_pair} for the pair, and is offline visuable using the PotreeConverter module available on github~\cite{PotreeConverter}.
 
 \begin{figure}[H]
     \centering
@@ -357,7 +357,7 @@ S2P pipeline comes with a pair and a triplet of test data captured by Pleiades. 
 
 \subsection{Planet Data}
 
-Data provided are coming from Skysat-2 and Skysat-3 which are made of 3 camera each, with a revisit time of $3$ to $4$ day at $500~km$ altitude~\cite{planet_product}. The agility of Skysat satellite is 2.3 target (6.6 x 10 km) per minute. The resolution of the panchromatic images is $0.9~m$, and academics can apply to their Education and Research program to download up to $10000~km^2/month$ of those data.
+Data provided are coming from Skysat-2 and Skysat-3 which are made of 3 camera each, with a revisit time of $3$ to $4$ day at $500~km$ altitude~\cite{planet_product}. The agility of Skysat satellite is 2.3 target (6.6 x 10 km) per minute. The resolution of the panchromatic images is $0.9~m$, and academics can apply to their Education and Research program to download up to $10000~\text{km}^2/\text{month}$ of those data.
 
 \subsubsection{Structure}
 
@@ -454,9 +454,9 @@ The geolocalisation have been done using the rpc model, with a reprojection alti
     \label{fig_trace_video}
 \end{figure}
 
+ \newpage
 \subsection{Mosaic of data}
 
- \newpage
  \begin{figure}[H]
      \centering
      \includegraphics[width = 0.95\textwidth]{d1.png}
@@ -496,7 +496,7 @@ The geolocalisation have been done using the rpc model, with a reprojection alti
 Unfortunately, we did not test the analytical way of correcting the pointing error with translation and rotation due to the time constraint of the project and code issues.
 
  \subsubsection{Testdata (Pléiades)}
- We first try our modified pipeline with improved pointing error correction on Pléiades images (see Figure \ref{fig:testdata}) from the \verb|s2p| Github repositroy. These images are located on the island of Reunion. We can observe on Figure \ref{fig:testdata-location} the error of the RPC function of the two images.\\
+ We first try our modified pipeline with improved pointing error correction on Pléiades images (see Figure \ref{fig:testdata}) from the \verb|s2p| Github repositroy. These images are located on the island of Reunion. We can observe on Figure \ref{fig_geoloc_testdata} the error of the RPC function of the two images.\\
  
             \begin{figure}[H]
             \centering
@@ -509,14 +509,6 @@ Unfortunately, we did not test the analytical way of correcting the pointing err
             \caption{Pléiades images of the Réunion}
              \label{fig:testdata}
           \end{figure}
-
-
-        \begin{figure}[H]
-    \centering
-    \includegraphics[width = 0.7\textwidth]{figures/geoloc_testdata.png}
-    \caption{Geolocation of Pléiades images (Réunion).}
-    \label{fig:testdata-location}
-\end{figure}
 
  Results from the different methods are compiled in Table \ref{tab:testdata-res}. The images were divided into $9$ tiles of $300 \times 300$ pixels.
 
@@ -541,7 +533,7 @@ Unfortunately, we did not test the analytical way of correcting the pointing err
          
             
  \subsubsection{Vidéo SkySat}
-             We then try our modified pipeline with improved pointing error correction on two images from the Skysat videos (see Figure \ref{fig:video}) from Planet's data. The video were shot on an harbor in Australia. We can see on Figure \ref{fig:video-location} the error of the RPC function of all the images of the video.\\
+             We then try our modified pipeline with improved pointing error correction on two images from the Skysat videos (see Figure \ref{fig:video}) from Planet's data. The video were shot on an harbor in Australia. We can see on Figure \ref{fig_trace_video} the error of the RPC function of all the images of the video.\\
              
             \begin{figure}[H]
             \centering
@@ -555,14 +547,7 @@ Unfortunately, we did not test the analytical way of correcting the pointing err
            \caption{First and $100$-th images of a SkySat video.}
            \label{fig:video}
           \end{figure}
-         
-          
-\begin{figure}[H]
-    \centering
-    \includegraphics[width = 0.7\textwidth]{figures/geoloc_video.png}
-    \caption{Geolocation of the SkySat video (Australia). }
-    \label{fig:video-location}
-\end{figure}
+        
           
 Results from the different methods are compiled in Table \ref{tab:video-res}. The images were divided into $3$ tiles of $1000 \times 1000$ pixels.
           
@@ -600,13 +585,7 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
  \caption{Two images from SkySat triplets.}
            \label{fig:triplet}
           \end{figure}
-          
-          \begin{figure}[H]
-    \centering
-    \includegraphics[width = 0.7\textwidth]{figures/8Z_trace.jpeg}
-    \caption{Trace at a given time from the $3$ cameras of a SkySat satellite.}
-    \label{fig:8Z_trace}
-\end{figure}
+         
         
     Results from the different methods are compiled in Table \ref{tab:triplet-res}. The images were divided into $3$ tiles of $1000 \times 1000$ pixels.    
         

@@ -1,11 +1,11 @@
 DEFAULT:
-	pdflatex *.tex
+	pdflatex report.tex
 
 all:
-	pdflatex *.tex
-	bibtex *.aux
-	pdflatex *.tex
-	pdflatex *.tex
+	pdflatex report.tex
+	bibtex report.aux
+	pdflatex report.tex
+	pdflatex report.tex
 
 clean:
 	rm *.aux
