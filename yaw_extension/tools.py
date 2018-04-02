@@ -198,7 +198,7 @@ def reprojection(img, tmp_img = None, tmp_png = None,
         display(mo)
     return footprint
 
-def geolocalisation(trace):
+def geolocalisation(trace, rpcs = None, h = 0):
     """
     """
     if type(trace) == dict:
@@ -207,11 +207,23 @@ def geolocalisation(trace):
         imgs
     else:
         assert type(trace) == list, "Trace should be a list or a dict of images"
+        imgs = trace
 
     footprint = []
     for i in tqdm(imgs):
         footprint.append(get_image_longlat_polygon(i))
 
+    # If altitude not 0, then reproject (h = 0) and relocalize (at h)
+    if h != 0:
+        assert rpcs is not None, "RPCs are needed"
+        assert len(rpcs) == len(trace),\
+        "Length and length of trace are not identical"
+        for j in range(len(footprint)):
+            polygon = np.array(footprint[j]['coordinates'][0])
+            for i in range(len(footprint[j]["coordinates"][0])):
+                x, y = rpcs[j].projection(polygon[i, 0], polygon[i, 1], 0)
+                new_lon, new_lat = rpcs[j].localization(x, y, h)
+                footprint[j]['coordinates'][0][i] = [new_lon, new_lat]
     m = clickablemap()
 
     for i in range(len(imgs)):

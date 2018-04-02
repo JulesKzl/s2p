@@ -2,19 +2,19 @@
   "out_dir": "./output",
   "images": [
     {
-      "img": "../testdata/input_pair/img_01.tif",
-      "rpc": "../testdata/input_pair/rpc_01.xml"
+      "img": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d1_0002.tif",
+      "rpc": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d1_0002_rpc.txt"
     },
     {
-      "img": "../testdata/input_pair/img_02.tif",
-      "rpc": "../testdata/input_pair/rpc_02.xml"
+      "img": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d1_0002.tif",
+      "rpc": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d1_0002_rpc.txt"
     }
   ],
   "roi": {
-    "x": 150,
-    "y": 150,
-    "w": 700,
-    "h": 700
+    "x": 1300,
+    "y": 400,
+    "w": 800,
+    "h": 800
   },
   "full_img": false,
   "matching_algorithm": "mgm",
@@ -26,7 +26,7 @@
   "epipolar_thresh": 0.5,
   "debug": true,
   "temporary_dir": "/tmp",
-  "tile_size": 300,
+  "tile_size": 1000,
   "clean_tmp": true,
   "clean_intermediate": false,
   "fusion_thresh": 3,
@@ -39,5 +39,5 @@
   "dsm_resolution": 0.5,
   "max_processes": 1,
   "pointing_error_correction_method": "analytic",
-  "pointing_error_correction_degree": 2
+  "pointing_error_correction_degree": 1
 }
