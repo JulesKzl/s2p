@@ -198,7 +198,7 @@ def reprojection(img, tmp_img = None, tmp_png = None,
         display(mo)
     return footprint
 
-def geolocalisation(trace, rpcs = None, h = 0):
+def geolocalisation(trace, rpcs = None, h = 0, show = True):
     """
     """
     if type(trace) == dict:
@@ -224,13 +224,15 @@ def geolocalisation(trace, rpcs = None, h = 0):
                 x, y = rpcs[j].projection(polygon[i, 0], polygon[i, 1], 0)
                 new_lon, new_lat = rpcs[j].localization(x, y, h)
                 footprint[j]['coordinates'][0][i] = [new_lon, new_lat]
-    m = clickablemap()
 
-    for i in range(len(imgs)):
-        m.add_GeoJSON(footprint[i])
+    if show:
+        m = clickablemap()
 
-    m.center = footprint[0]['coordinates'][0][0][::-1]
-    display(m)
+        for i in range(len(imgs)):
+            m.add_GeoJSON(footprint[i])
+
+        m.center = footprint[0]['coordinates'][0][0][::-1]
+        display(m)
 
     return footprint
 
