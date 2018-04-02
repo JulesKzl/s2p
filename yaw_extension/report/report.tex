@@ -36,9 +36,9 @@
 
  	\vspace{1.5cm}
  \end{center}
- 
+
  \tableofcontents
- 
+
 \begin{abstract}
 
 \end{abstract}
@@ -61,14 +61,14 @@ on the globe and back (See Figure \ref{rpc}).
 
 
 The projection function returns the image coordinates, in pixels, of a given 3-space
-point. 
+point.
 \begin{align*}
 P:&\; \mathbb{R}^3\to\mathbb{R}^2\\
 &(\lambda, \theta, h) \mapsto \textbf{x}
 \end{align*}
 In that system a point of 3-space is identified by its
 longitude $\lambda\in[-180,180]$, latitude $\theta\in[-90,90]$ and
-altitude $h$, in meters, above the reference ellipsoid. 
+altitude $h$, in meters, above the reference ellipsoid.
 
 
 The localization function is its
@@ -100,28 +100,28 @@ For a point $\textbf{x}$ in the image $u$, the epipolar is the curve pararametri
 \begin{align*}
 \text{epi}_{uv}^{x} : h \rightarrow \text{RPC}_u(\text{RPC}^{-1}_v(\textbf{x}, h))
 \end{align*}
-where RPC and RPC$^{-1}$ are the projection and localization functions. In pratice we observe this curve as straight parallel lines. 
+where RPC and RPC$^{-1}$ are the projection and localization functions. In pratice we observe this curve as straight parallel lines.
 
 \subsection{Affine fundamental matrix approximation}
 From  \cite{de2014automatic}, we know that, for each correspondence $i$, the epipolar curve $\text{epi}^{\textbf{x}_i}_{u v}(R)$ is approximated up to $0.05$ pixels by the straight line $F\textbf{x}_i$, where $F$ is
-the affine fundamental matrix between the two views for the considered tile. Since the fundamental matrix, due to the approximation, is \textit{affine}, all the lines $(F\textbf{x}_i)_{i=1...N}$ are parallel. 
+the affine fundamental matrix between the two views for the considered tile. Since the fundamental matrix, due to the approximation, is \textit{affine}, all the lines $(F\textbf{x}_i)_{i=1...N}$ are parallel.
 
 \section{Satellite attitude error effects on stereo images}
 \subsection{Pointing error}
 However, due to the limited precision of the
-camera calibration, there is a bias of a few pixels in the RPC functions. 
+camera calibration, there is a bias of a few pixels in the RPC functions.
 For stereo matching, we can not ignore this error since the epipolar constraints are derived from
 the parameters of the cameras.
 Therefore this bias has to be corrected before applying rectification.\\
 
-This error, often of the order of a few pixels, is the sum, for all correspondences, of the distance between a correspondance on an image and the epipolar curve on the same image computed with the correspondance on the other image. 
+This error, often of the order of a few pixels, is the sum, for all correspondences, of the distance between a correspondance on an image and the epipolar curve on the same image computed with the correspondance on the other image.
 Formally, given two images $u, v$ and a set of correspondences $(\textbf{x}_i, \textbf{x}'_i)_{i=1...N}$ , the pointing error between $u$ and $v$ is defined by:
 \begin{align*}
-\dfrac{1}{N} \sum\limits_{i=1}^{N} d(\textbf{x}_i', \text{epi}_{uv}^{\textbf{x}_i}) 
+\dfrac{1}{N} \sum\limits_{i=1}^{N} d(\textbf{x}_i', \text{epi}_{uv}^{\textbf{x}_i})
 \end{align*}
 which can be approximated, using the affine fundamental matrix $F$, to:
 \begin{align*}
-\dfrac{1}{N} \sum\limits_{i=1}^{N} d(\textbf{x}_i', F\textbf{x}_i) 
+\dfrac{1}{N} \sum\limits_{i=1}^{N} d(\textbf{x}_i', F\textbf{x}_i)
 \end{align*}
 
 
@@ -129,7 +129,7 @@ which can be approximated, using the affine fundamental matrix $F$, to:
 
 \subsection{Sensibility}
 \label{subsec:sensibility}
-%Sensiblity of roll, pitch and yaw. Scheme (roll and pitch depend of the height of the satellite whereas yaw only the angle) 
+%Sensiblity of roll, pitch and yaw. Scheme (roll and pitch depend of the height of the satellite whereas yaw only the angle)
 The effect of attitude errors on the localization function RPC$^{-1}$ can be computed simply with zero roll and pitch angles. For roll or pitch angles
 a small error $\varepsilon$ induces, to first order, a translation of $a\varepsilon$ on the ground, where $a$ is
 the distance between the satellite and the ground. For the yaw, a small error $\varepsilon$  induces
@@ -153,6 +153,10 @@ The desired transformation $f^{*}$ minimises the relative pointing error:
 \label{minif}
 f^* = \argmin{f} \dfrac{1}{N} \sum\limits_{i=1}^{N} d(f(\textbf{x}'_i), \text{epi}^{\textbf{x}_i}_{u v}(R))
 \end{align}
+
+\paragraph{Affine fundamental matrix approximation\\}
+From  \cite{carlo_2014_pushbroom}, we know that, for each correspondence $i$, the epipolar curve $\text{epi}^{\textbf{x}_i}_{u v}(R)$ is approximated up to $0.05$ pixels by the straight line $F\textbf{x}_i$, where $F$ is
+the affine fundamental matrix between the two views for the considered tile. Since the fundamental matrix, due to the approximation, is \textit{affine}, all the lines $(F\textbf{x}_i)_{i=1...N}$ are parallel.
 
 \subsection{Roll and Pitch Angles}
 Because of sensitivity issues, we first can take only roll and pitch error into account. Therefore, according to section \ref{subsec:sensibility}, we search for a transformation $f$ such that
@@ -224,7 +228,7 @@ To correct the pointing error in the rectified setting we find $R^*$ and $T^*$ m
 \begin{align}
     (R^*, T^*) = \argmin{R,T} \sum_{i=1}^N d(TR\bm{x_i'}, F\bm{x}_i)^2
 \end{align}
-As in~\cite{de2014b}
+As in~\cite{carlo_2014_automatic}
 
 After rectification, the horizontal line $F\bm{x}_i$ can be written, in homogeneous coordinates, as
 \begin{align*}
@@ -251,7 +255,7 @@ We can write this optimization problem as :
 \begin{align*}
 X^* = \argmin{X} \| AX + b \|^2
 \end{align*}
-where 
+where
 \begin{align*}
 A =
 \begin{pmatrix}
@@ -278,9 +282,9 @@ The solution of this optimization problem is the solution of the normal equation
 \begin{align*}
  A^TAX = -A^Tb
 \end{align*}
-Here, 
+Here,
 \begin{align*}
-A^TA = 
+A^TA =
 \begin{pmatrix}
 \sum\limits_{i=1}^N x_{i}'^2 & \sum\limits_{i=1}^Nx_{i}' \\
 \sum\limits_{i=1}^N x_{i}' & N \\
@@ -301,89 +305,190 @@ To correct the pointing error in the rectified setting we find $R^*$ and $T^*$ m
     (R^*, T^*) = \argmin{R,T} \sum_{i=1}^N d(RT\bm{x_i'}, F\bm{x}_i)
 \end{align}
 
-Since we are not able to solve this optimization problem analytically, we solve it numerically thanks to the L-BFGS algorithm. As input are the correspondences on the images and the affine approximation matrix and the optimization algorithm outputs the optimal angle $\theta \in [0, 2\pi]$ corresponding to the error on the yaw and a translation $t \in \mathbb{R}$ corresponding to a translation in the normal direction w.r.t. the epipolar lines. 
+Since we are not able to solve this optimization problem analytically, we solve it numerically thanks to the L-BFGS algorithm. As input are the correspondences on the images and the affine approximation matrix and the optimization algorithm outputs the optimal angle $\theta \in [0, 2\pi]$ corresponding to the error on the yaw and a translation $t \in \mathbb{R}$ corresponding to a translation in the normal direction w.r.t. the epipolar lines.
 
 \paragraph{Limited-memory BFGS\\}
 Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton methods that approximates the BFGS algorithm using a limited amount of computer memory. In our case we do not need to compute the gradient analytically since the algorithm approximates it using finite difference. We use this algorithm as a black box to solve the minimization problem.
 
-\section{Planet data}
+\section{Data overview}
 
-\subsection{Structure}
+\subsection{Test data}
+
+S2P pipeline comes with a pair and a triplet of test data captured by Pleiades. The input pair and their geolocalisation is shown below in figure~\ref{fig_geoloc_testdata}. After the pair, the triplet is also represented in figure~\ref{fig_geoloc_testdata_triplet}. The expected output result is also shown in figure~\ref{fig_expected_output_pair}, and is offline visuable using the PotreeConverter module available on github~\cite{PotreeConverter}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height = 0.4\textheight]{elevation_intro.png}
+    \caption{Expected output of S2P on test data input pair}
+    \label{fig_expected_output_pair}
+\end{figure}
 
 
-\begin{forest}
-  my label/.style={
-    label={[font=\sffamily]right:{#1}},
-  },
-  for tree={
-    folder,
-    font=\sffamily,
-    text=white,
-    minimum height=0.75cm,
-    if level=0{fill=ForestGreen}{fill/.wrap pgfmath arg={SlateBlue#1}{int(4-(mod((level()-1),4)))}},
-    rounded corners=4pt,
-    grow'=0,
-    edge={ForestGreen,rounded corners,line width=1pt},
-    fit=band,
-  },
-  [data
-    [s03\_20161003T161107Z
-      [panchromatic
-        [s03\_20161003T161107Z\_pan\_d1\_0001\_rpc.txt]
-        [s03\_20161003T161107Z\_pan\_d1\_0001.tif]
-      ]
-      [pansharp
-        [s03\_20161003T161107Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
-        [s03\_20161003T161107Z\_pansharp\_bgrn\_d1\_0001.tif]
-      ]
-    ]
-    [s03\_20161003T161148Z
-      [panchromatic
-        [s03\_20161003T161148Z\_pan\_d1\_0001\_rpc.txt]
-        [s03\_20161003T161148Z\_pan\_d1\_0001.tif]
-      ]
-      [pansharp
-        [s03\_20161003T161148Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
-        [s03\_20161003T161148Z\_pansharp\_bgrn\_d1\_0001.tif]
-      ]
-    ]
-    [s03\_20161003T161231Z
-      [panchromatic
-        [s03\_20161003T161231Z\_pan\_d1\_000\_rpc.txt]
-        [s03\_20161003T161231Z\_pan\_d1\_0001.tif]
-      ]
-      [pansharp
-        [s03\_20161003T161231Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
-        [s03\_20161003T161231Z\_pansharp\_bgrn\_d1\_0001.tif]
-      ]
-    ]
-  ]
-\end{forest}
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.8\textwidth}
+        \centering
+        \includegraphics[width = 0.95\textwidth]{ROI_testdata_pair.jpeg}
+        \caption{Region of intereset (ROI, in red) in test data input pair}
+    \end{subfigure}%
+    ~
+    \vfill
+    ~
+    \begin{subfigure}[t]{0.8\textwidth}
+        \centering
+        \includegraphics[width = 0.95\textwidth]{geoloc_testdata.png}
+        \caption{Geolocalisation of the test data input pair, in La Réunion. Reprojected using an elevation of $h=2350~m$. Center of ROI $(lat, lon) ~\approx (-21.23066754, 55.65022517)$}
+    \end{subfigure}%
+    \caption{Overview of the test data input pair}
+    \label{fig_geoloc_testdata}
+\end{figure}
 
-\subsection{Geolocalisation}
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.8\textwidth}
+        \centering
+        \includegraphics[width = 0.95\textwidth]{ROI_testdata_triplets.png}
+        \caption{Region of intereset (ROI, in red) in test data input triplet. Only one (img\_01.tif) of the 3 images is represented.}
+    \end{subfigure}%
+    ~
+    \vfill
+    ~
+    \begin{subfigure}[t]{0.8\textwidth}
+        \centering
+        \includegraphics[width = 0.95\textwidth]{geoloc_testdata_triplets.png}
+        \caption{Geolocalisation of the test data input triplet, east of Marseille. Reprojected using an elevation of $h=300~m$. Center of ROI $(lat, lon) ~\approx (43.26182762, 5.443071)$}
+    \end{subfigure}%
+    \caption{Overview of the test data input triplet}
+    \label{fig_geoloc_testdata_triplet}
+\end{figure}
+
+\subsection{Planet Data}
+
+Data provided are coming from Skysat-2 and Skysat-3 which are made of 3 camera each, with a revisit time of $3$ to $4$ day at $500~km$ altitude~\cite{planet_product}. The agility of Skysat satellite is 2.3 target (6.6 x 10 km) per minute. The resolution of the panchromatic images is $0.9~m$, and academics can apply to their Education and Research program to download up to $10000~km^2/month$ of those data.
+
+\subsubsection{Structure}
+
+The structure of the provided Skysat-2 data are represented in figure~\ref{fig_forest_skysat_2}. Each trace is identified with a catalog ID, for example s03\_20161003T161107Z, which uniquely identifies the trace for s03 (Skysat-3) timed at $16:11:07$ Zoulou the $03/10/2016$. For each trace, the panchromatic and the pansharp data are available; nonetheless, we only used the panchromatic ones. The 3 detectors of skysat are then identified with $d1$, $d2$ and $d3$, and images from each detector captured during the trace are stored as a trip of single frames, with a small horizontal and vertical overlap. With each tif image file comes the rpc model stored in ikonos convention. Each image is numbered between $1$ and $18$ for each detector, and the common POSIX time for a number for the three detectors is stored in the RPC file associated with the take. For 18 images, for the 3 detectors, the necessary time is approximately $9.2~s$.
+
+The structure of the provided Skysat-3 data are simpler: 892 panchromatic frames were collected from $02:05:54$ Zoulou to $02:06:23$ Zoulou the $07/05/2015$
+
+\begin{figure}
+    \centering
+    \resizebox{!}{.7\textheight}{
+    \begin{forest}
+      my label/.style={
+        label={[font=\sffamily]right:{#1}},
+      },
+      for tree={
+        folder,
+        font=\sffamily,
+        text=white,
+        minimum height=0.75cm,
+        if level=0{fill=ForestGreen}{fill/.wrap pgfmath arg={SlateBlue#1}{int(4-(mod((level()-1),4)))}},
+        rounded corners=4pt,
+        grow'=0,
+        edge={ForestGreen,rounded corners,line width=1pt},
+        fit=band,
+      },
+      [data
+        [s03\_20161003T161107Z
+          [panchromatic
+            [s03\_20161003T161107Z\_pan\_d1\_0001\_rpc.txt]
+            [s03\_20161003T161107Z\_pan\_d1\_0001.tif]
+          ]
+          [pansharp
+            [s03\_20161003T161107Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
+            [s03\_20161003T161107Z\_pansharp\_bgrn\_d1\_0001.tif]
+          ]
+        ]
+        [s03\_20161003T161148Z
+          [panchromatic
+            [s03\_20161003T161148Z\_pan\_d1\_0001\_rpc.txt]
+            [s03\_20161003T161148Z\_pan\_d1\_0001.tif]
+          ]
+          [pansharp
+            [s03\_20161003T161148Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
+            [s03\_20161003T161148Z\_pansharp\_bgrn\_d1\_0001.tif]
+          ]
+        ]
+        [s03\_20161003T161231Z
+          [panchromatic
+            [s03\_20161003T161231Z\_pan\_d1\_000\_rpc.txt]
+            [s03\_20161003T161231Z\_pan\_d1\_0001.tif]
+          ]
+          [pansharp
+            [s03\_20161003T161231Z\_pansharp\_bgrn\_d1\_0001\_rpc.txt]
+            [s03\_20161003T161231Z\_pansharp\_bgrn\_d1\_0001.tif]
+          ]
+        ]
+      ]
+  \end{forest}
+  }
+
+    \caption{Structure of the provided Skysat-2 data}
+    \label{fig_forest_skysat_2}
+\end{figure}
+
+\subsubsection{Geolocalisation}
+
+The geolocalisation have been done using the rpc model, with a reprojection altitude depending of the area considered: for Skysat-2, near Cushing (United States), an altitude of $h=285~m$ (mean altitude of Cushing) has been used, while an altitude of $h=0m$ has been used for Skysat-3 video, in port Hedland (Australia). The three traces for Skysat-2 are shown in chronological order in figure~\ref{fig_trace_7Z}~\ref{fig_trace_8Z}~\ref{fig_trace_1Z}, while the trace for Skysat-3 only represents the 1t, 300th, and 600th images in the video.
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[height = 0.8\textheight]{trace_7Z.png}
+    \caption{Trace s03\_20161003T161107Z}
+    \label{fig_trace_7Z}
+\end{figure}
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[height = 0.8\textheight]{trace_8Z.png}
+    \caption{Trace s03\_20161003T161148Z}
+    \label{fig_trace_8Z}
+\end{figure}
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[height = 0.8\textheight]{trace_1Z.png}
+    \caption{Trace s03\_20161003T161231Z}
+    \label{fig_trace_1Z}
+\end{figure}
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.8\textwidth]{trace_video.png}
+    \caption{Trace s02\_20150507T020554Z}
+    \label{fig_trace_video}
+\end{figure}
+
+\subsection{Mosaic of data}
 
 \newpage
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.95\textwidth]{d1.png}
-    \caption{Mosaic of d1. From left to right: 1Z, 7Z, 8Z}
-    \label{}
+    \caption{Mosaic of d1. From left to right: 1Z, 8Z, 7Z}
+    \label{fig_mosaic_d1}
 \end{figure}
 
 \newpage
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.95\textwidth]{d2.png}
-    \caption{Mosaic of d2. From left to right: 1Z, 7Z, 8Z}
-    \label{}
+    \caption{Mosaic of d2. From left to right: 1Z, 8Z, 7Z}
+    \label{fig_mosaic_d2}
 \end{figure}
 
 \newpage
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.95\textwidth]{d3.png}
-    \caption{Mosaic of d3. From left to right: 1Z, 7Z, 8Z}
-    \label{}
+    \caption{Mosaic of d3. From left to right: 1Z, 8Z, 7Z}
+    \label{fig_mosaic_d3}
 \end{figure}
 
 \newpage

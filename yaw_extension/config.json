@@ -2,6 +2,21 @@
   "out_dir": "./output",
   "images": [
     {
+<<<<<<< HEAD
+      "img": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d1_0002.tif",
+      "rpc": "../data/s03_20161003T161231Z/panchromatic/s03_20161003T161231Z_pan_d1_0002_rpc.txt"
+    },
+    {
+      "img": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d1_0002.tif",
+      "rpc": "../data/s03_20161003T161148Z/panchromatic/s03_20161003T161148Z_pan_d1_0002_rpc.txt"
+    }
+  ],
+  "roi": {
+    "x": 1300,
+    "y": 400,
+    "w": 800,
+    "h": 800
+=======
       "img": "../data/s03_20161003T161107Z/panchromatic/s03_20161003T161107Z_pan_d2_0009.tif",
       "rpc": "../data/s03_20161003T161107Z/panchromatic/s03_20161003T161107Z_pan_d2_0009_rpc.txt"
     },
@@ -15,6 +30,7 @@
     "y": 0,
     "w": 1000,
     "h": 1000
+>>>>>>> 3741e482524c82cf6cbdb186f2cab508597a368b
   },
   "full_img": false,
   "matching_algorithm": "mgm",
@@ -38,7 +54,13 @@
   "msk_erosion": 0,
   "dsm_resolution": 0.5,
   "max_processes": 1,
+<<<<<<< HEAD
+  "pointing_error_correction_method": "analytic",
+  "pointing_error_correction_degree": 1
+}
+=======
   "pointing_error_correction_method": "numeric",
   "pointing_error_correction_degree": 2,
   "apply_rectification": false
 }
+>>>>>>> 3741e482524c82cf6cbdb186f2cab508597a368b

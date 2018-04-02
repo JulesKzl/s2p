@@ -8,7 +8,7 @@ iterate.dat
 testoutput
 .idea
 yaw_extension/output
-yaw_extension/report/report.pdf
+./yaw_extension/report/report.pdf
 
 # 3rdparty #
 ############
