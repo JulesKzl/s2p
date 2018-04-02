@@ -311,7 +311,7 @@ Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton m
 
 \subsection{Test data}
 
-S2P pipeline comes with a pair and a triplet of test data captured by Pleiades. The input pair and their geolocalisation is shown below in figure~\ref{fig_geoloc_testdata}. After the pair, the triplet is also represented in figure~\ref{fig_geoloc_testdata_triplet}. The expected output result is also shown in figure~\ref{fig_expected_output_pair}, and is offline visuable using the PotreeConverter module available on github~\cite{PotreeConverter}.
+S2P pipeline comes with a pair and a triplet of test data captured by Pleiades. The input pair and their geolocalisation is shown below in figure~\ref{fig_geoloc_testdata}. After the pair, the triplet is also represented in figure~\ref{fig_geoloc_testdata_triplet}. The expected output result is also shown in figure~\ref{fig_expected_output_pair} for the pair, and is offline visuable using the PotreeConverter module available on github~\cite{PotreeConverter}.
 
 \begin{figure}[H]
     \centering
@@ -452,38 +452,38 @@ The geolocalisation have been done using the rpc model, with a reprojection alti
     \label{fig_trace_1Z}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width = 0.8\textwidth]{trace_video.png}
     \caption{Geolocalisation of trace s02\_20150507T020554Z in Port Hedland (Australia). Reprojected using an elevation of $h=285~m$}
     \label{fig_trace_video}
 \end{figure}
 
-\subsection{Geolocalisation}
+\subsection{Mosaic of data}
 
-\newpage
-\begin{figure}[H]
-    \centering
-    \includegraphics[width = 0.95\textwidth]{d1.png}
-    \caption{Mosaic of d1. From left to right: 1Z, 7Z, 8Z}
-    \label{}
-\end{figure}
+ \newpage
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width = 0.95\textwidth]{d1.png}
+     \caption{Mosaic of d1. From left to right: 1Z, 8Z, 7Z}
+     \label{fig_mosaic_d1}
+ \end{figure}
 
-\newpage
-\begin{figure}[H]
-    \centering
-    \includegraphics[width = 0.95\textwidth]{d2.png}
-    \caption{Mosaic of d2. From left to right: 1Z, 7Z, 8Z}
-    \label{}
-\end{figure}
+ \newpage
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width = 0.95\textwidth]{d2.png}
+     \caption{Mosaic of d2. From left to right: 1Z, 8Z, 7Z}
+     \label{fig_mosaic_d2}
+ \end{figure}
 
-\newpage
-\begin{figure}[H]
-    \centering
-    \includegraphics[width = 0.95\textwidth]{d3.png}
-    \caption{Mosaic of d3. From left to right: 1Z, 7Z, 8Z}
-    \label{}
-\end{figure}
+ \newpage
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width = 0.95\textwidth]{d3.png}
+     \caption{Mosaic of d3. From left to right: 1Z, 8Z, 7Z}
+     \label{fig_mosaic_d3}
+ \end{figure}
 
 \newpage
 \section{Experimental Results}
