@@ -73,10 +73,12 @@ def pointing_correction(tile, i):
         if (('pointing_error_correction_method' in cfg) and ('pointing_error_correction_degree' in cfg)):
             pec_degree = cfg['pointing_error_correction_degree']
             pec_method = cfg['pointing_error_correction_method']
+            apply_rectification = cfg['apply_rectification']
         else:
             pec_degree = 'analytic'
             pec_method = 1
-        A, m, F = pointing_accuracy.compute_correction(img1, rpc1, img2, rpc2, x, y, w, h, pec_method, pec_degree)
+            apply_rectification = True
+        A, m, F = pointing_accuracy.compute_correction(img1, rpc1, img2, rpc2, x, y, w, h, pec_method, pec_degree, apply_rectification)
     except common.RunFailure as e:
         stderr = os.path.join(out_dir, 'stderr.log')
         with open(stderr, 'w') as f:
@@ -702,7 +704,6 @@ def main(user_cfg, steps=ALL_STEPS):
     if 'local-pointing' in steps:
         print('correcting pointing locally...')
         parallel.launch_calls(pointing_correction, tiles_pairs, nb_workers)
-    exit(1)
 
     if 'global-pointing' in steps:
         print('correcting pointing globally...')

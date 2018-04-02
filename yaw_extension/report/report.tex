@@ -36,10 +36,17 @@
 
  	\vspace{1.5cm}
  \end{center}
-
+ 
  \tableofcontents
+ 
+\begin{abstract}
+
+\end{abstract}
 
 \section{Attitude of a Satellite}
+
+
+Roll, pitch and yaw angles. (See Figure \ref{angles}).
 
 \begin{figure}[h]
     \centering
@@ -48,28 +55,118 @@
    \label{angles}
 \end{figure}
 
-\section{Satellite attitude error effects on stereo images}
-\label{sec:sensibility}
-What is pointing error ?
-Sensiblity of roll, pitch and yaw. Scheme (roll and pitch depend of the height of the satellite whereas yaw only the angle)
+\subsection{Localization and projection functions}
+Localization and projection functions  allow converting from image coordinates to coordinates
+on the globe and back (See Figure \ref{rpc}).
 
+
+The projection function returns the image coordinates, in pixels, of a given 3-space
+point. 
+\begin{align*}
+P:&\; \mathbb{R}^3\to\mathbb{R}^2\\
+&(\lambda, \theta, h) \mapsto \textbf{x}
+\end{align*}
+In that system a point of 3-space is identified by its
+longitude $\lambda\in[-180,180]$, latitude $\theta\in[-90,90]$ and
+altitude $h$, in meters, above the reference ellipsoid. 
+
+
+The localization function is its
+inverse with respect to the first two components. It takes a point $\textbf{x}
+= (x, y)^\top$ in the image domain together with an altitude $h$, and
+returns the geographic coordinates of the unique 3-space point
+$\textbf{X} = (\lambda, \theta, h)$ whose altitude is $h$ and whose image is $\textbf{x}$.
+\begin{align*}
+L:&\; \mathbb{R}^3\to\mathbb{R}^2\\
+&(\textbf{x}, h) \mapsto (\lambda, \theta)
+\end{align*}
+
+
+
+We use the Rational Polynomial Coefficient (RPC) camera model which is an
+analytic description of the projection and localization functions (cite). In the RPC model, the projection and
+localization functions are expressed as ratio of multivariate cubic
+polynomials.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/rpc_illustration.png}
+   \caption{ Projection (RPC) and localization (RPC$^{-1}$) functions.}
+   \label{rpc}
+\end{figure}
+
+\subsection{Epipolar curves}
+For a point $\textbf{x}$ in the image $u$, the epipolar is the curve pararametrized by the alitude $h$ and defined as:
+\begin{align*}
+\text{epi}_{uv}^{x} : h \rightarrow \text{RPC}_u(\text{RPC}^{-1}_v(\textbf{x}, h))
+\end{align*}
+where RPC and RPC$^{-1}$ are the projection and localization functions. In pratice we observe this curve as straight parallel lines. 
+
+\subsection{Affine fundamental matrix approximation}
+From  \cite{de2014automatic}, we know that, for each correspondence $i$, the epipolar curve $\text{epi}^{\textbf{x}_i}_{u v}(R)$ is approximated up to $0.05$ pixels by the straight line $F\textbf{x}_i$, where $F$ is
+the affine fundamental matrix between the two views for the considered tile. Since the fundamental matrix, due to the approximation, is \textit{affine}, all the lines $(F\textbf{x}_i)_{i=1...N}$ are parallel. 
+
+\section{Satellite attitude error effects on stereo images}
+\subsection{Pointing error}
+However, due to the limited precision of the
+camera calibration, there is a bias of a few pixels in the RPC functions. 
+For stereo matching, we can not ignore this error since the epipolar constraints are derived from
+the parameters of the cameras.
+Therefore this bias has to be corrected before applying rectification.\\
+
+This error, often of the order of a few pixels, is the sum, for all correspondences, of the distance between a correspondance on an image and the epipolar curve on the same image computed with the correspondance on the other image. 
+Formally, given two images $u, v$ and a set of correspondences $(\textbf{x}_i, \textbf{x}'_i)_{i=1...N}$ , the pointing error between $u$ and $v$ is defined by:
+\begin{align*}
+\dfrac{1}{N} \sum\limits_{i=1}^{N} d(\textbf{x}_i', \text{epi}_{uv}^{\textbf{x}_i}) 
+\end{align*}
+which can be approximated, using the affine fundamental matrix $F$, to:
+\begin{align*}
+\dfrac{1}{N} \sum\limits_{i=1}^{N} d(\textbf{x}_i', F\textbf{x}_i) 
+\end{align*}
+
+
+
+
+\subsection{Sensibility}
+\label{subsec:sensibility}
+%Sensiblity of roll, pitch and yaw. Scheme (roll and pitch depend of the height of the satellite whereas yaw only the angle) 
+The effect of attitude errors on the localization function RPC$^{-1}$ can be computed simply with zero roll and pitch angles. For roll or pitch angles
+a small error $\varepsilon$ induces, to first order, a translation of $a\varepsilon$ on the ground, where $a$ is
+the distance between the satellite and the ground. For the yaw, a small error $\varepsilon$  induces
+a rotation of at most $D\varepsilon/2$ on the ground, where $D$ is the width of the projected pushbroom sensor of the satellite (See Figure \ref{sensiblity}).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/sensibility.png}
+   \caption{Sensibility for roll, pitch and yaw angles.}
+   \label{sensiblity}
+\end{figure}
+
+For SkySat satellites, we can have an error $\varepsilon \simeq 50 \; \mu \text{rad}$ with leads to an error of about $10$ degree knowing that $D \simeq 9 \text{km}$.
+%500 km altitude orbit
 
 \section{Correction of Relative Pointing Error}
+<<<<<<< HEAD
 \cite{carlo_2014_pushbroom}\\
+=======
+>>>>>>> 3741e482524c82cf6cbdb186f2cab508597a368b
 
-A simple way to correct the relative pointing error is to transform one of the two images, in such a way that the corresponding points fall on the respective epipolar curves: given two images $u$, $v$ and a set of correspondences $(\textbf{x}_i , \textbf{x}'_i)_{i=1...N}$ , we search for a transformation $f$ such that, for all $i$, the transformed point $f(\textbf{x}'_i)$ lies on the epipolar curve $\text{epi}^{\textbf{x}_i}_{u v}(R)$.
+A simple and automatic way to correct the pointing error is to transform one of the two images, in such a way that the corresponding points fall on the respective epipolar curves. More formally, given two images $u$, $v$ and a set of correspondences $(\textbf{x}_i , \textbf{x}'_i)_{i=1...N}$ , we search for a transformation $f$ such that, for all $i$, the transformed point $f(\textbf{x}'_i)$ lies on the epipolar curve $\text{epi}^{\textbf{x}_i}_{u v}(R)$.
 The desired transformation $f^{*}$ minimises the relative pointing error:
 \begin{align}
 \label{minif}
 f^* = \argmin{f} \dfrac{1}{N} \sum\limits_{i=1}^{N} d(f(\textbf{x}'_i), \text{epi}^{\textbf{x}_i}_{u v}(R))
 \end{align}
 
+<<<<<<< HEAD
 \paragraph{Affine fundamental matrix approximation\\}
 From  \cite{carlo_2014_pushbroom}, we know that, for each correspondence $i$, the epipolar curve $\text{epi}^{\textbf{x}_i}_{u v}(R)$ is approximated up to $0.05$ pixels by the straight line $F\textbf{x}_i$, where $F$ is
 the affine fundamental matrix between the two views for the considered tile. Since the fundamental matrix, due to the approximation, is \textit{affine}, all the lines $(F\textbf{x}_i)_{i=1...N}$ are parallel.
 
+=======
+>>>>>>> 3741e482524c82cf6cbdb186f2cab508597a368b
 \subsection{Roll and Pitch Angles}
-Because of sensitivity issues, we first can take only roll and pitch error into account. Therefore, according to section \ref{sec:sensibility}, we search for a transformation $f$ such that
+Because of sensitivity issues, we first can take only roll and pitch error into account. Therefore, according to section \ref{subsec:sensibility}, we search for a transformation $f$ such that
 \begin{align*}
 f(\textbf{x}) = T\textbf{x}
 \end{align*}
@@ -165,7 +262,7 @@ We can write this optimization problem as :
 \begin{align*}
 X^* = \argmin{X} \| AX + b \|^2
 \end{align*}
-where
+where 
 \begin{align*}
 A =
 \begin{pmatrix}
@@ -192,9 +289,9 @@ The solution of this optimization problem is the solution of the normal equation
 \begin{align*}
  A^TAX = -A^Tb
 \end{align*}
-Here,
+Here, 
 \begin{align*}
-A^TA =
+A^TA = 
 \begin{pmatrix}
 \sum\limits_{i=1}^N x_{i}'^2 & \sum\limits_{i=1}^Nx_{i}' \\
 \sum\limits_{i=1}^N x_{i}' & N \\
@@ -215,7 +312,7 @@ To correct the pointing error in the rectified setting we find $R^*$ and $T^*$ m
     (R^*, T^*) = \argmin{R,T} \sum_{i=1}^N d(RT\bm{x_i'}, F\bm{x}_i)
 \end{align}
 
-Since we are not able to solve this optimization problem analytically, we solve it numerically thanks to the L-BFGS algorithm. As input are the correspondences on the images and the affine approximation matrix and the optimization algorithm outputs the optimal angle $\theta \in [0, 2\pi]$ corresponding to the error on the yaw and a translation $t \in \mathbb{R}$ corresponding to a translation in the normal direction w.r.t. the epipolar lines.
+Since we are not able to solve this optimization problem analytically, we solve it numerically thanks to the L-BFGS algorithm. As input are the correspondences on the images and the affine approximation matrix and the optimization algorithm outputs the optimal angle $\theta \in [0, 2\pi]$ corresponding to the error on the yaw and a translation $t \in \mathbb{R}$ corresponding to a translation in the normal direction w.r.t. the epipolar lines. 
 
 \paragraph{Limited-memory BFGS\\}
 Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton methods that approximates the BFGS algorithm using a limited amount of computer memory. In our case we do not need to compute the gradient analytically since the algorithm approximates it using finite difference. We use this algorithm as a black box to solve the minimization problem.
@@ -381,24 +478,39 @@ The geolocalisation have been done using the rpc model, with a reprojection alti
 \begin{figure}
     \centering
     \includegraphics[width = 0.95\textwidth]{d1.png}
+<<<<<<< HEAD
     \caption{Mosaic of d1. From left to right: 1Z, 8Z, 7Z}
     \label{fig_mosaic_d1}
+=======
+    \caption{Mosaic of d1. From left to right: 1Z, 7Z, 8Z}
+    \label{}
+>>>>>>> 3741e482524c82cf6cbdb186f2cab508597a368b
 \end{figure}
 
 \newpage
 \begin{figure}
     \centering
     \includegraphics[width = 0.95\textwidth]{d2.png}
+<<<<<<< HEAD
     \caption{Mosaic of d2. From left to right: 1Z, 8Z, 7Z}
     \label{fig_mosaic_d2}
+=======
+    \caption{Mosaic of d2. From left to right: 1Z, 7Z, 8Z}
+    \label{}
+>>>>>>> 3741e482524c82cf6cbdb186f2cab508597a368b
 \end{figure}
 
 \newpage
 \begin{figure}
     \centering
     \includegraphics[width = 0.95\textwidth]{d3.png}
+<<<<<<< HEAD
     \caption{Mosaic of d3. From left to right: 1Z, 8Z, 7Z}
     \label{fig_mosaic_d3}
+=======
+    \caption{Mosaic of d3. From left to right: 1Z, 7Z, 8Z}
+    \label{}
+>>>>>>> 3741e482524c82cf6cbdb186f2cab508597a368b
 \end{figure}
 
 

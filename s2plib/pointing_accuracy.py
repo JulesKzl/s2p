@@ -72,36 +72,48 @@ def rigid_transform_matrix(v, ab):
 
     Arguments:
         v: numpy 1D array, of length 3, containing the parameters of the
-            planar transform. These parameters are:
-            v[0]: angle of the rotation, in radians
-            v[1]: x coordinate of the vector of the translation
-            v[2]: y coordinate of the vector of the translation
+            planar transform.
 
     Returns:
         A numpy 3x3 matrix, representing the euclidean transform (rotation
         followed by translation) in homogeneous coordinates.
     """
+    # Unpack v
+    # Translation independent
+    if (len(ab) == 0):
+        tx = v[0]
+        ty = v[1]
+        if (len(v) > 2):
+            theta = v[2]
+        else:
+            theta = 0
+    # Translation dependent
+    else:
+        t = v[0]
+        tx = t*ab[0]
+        ty = t*ab[1]
+        if (len(v) > 1):
+            theta = v[1]
+        else:
+            theta = 0
+
     # # centering of coordinates with respect to the center of the big pleiades
     # # image (40000x40000)
     C = np.eye(3)
-    if (len(v) == 4):
-        C[0, 2] = v[2]
-        C[1, 2] = v[3]
+    if (len(v) > 3):
+        C[0, 2] = v[3]
+        C[1, 2] = v[4]
 
     # matrix construction
     R = np.eye(3)
-    if (len(v) == 2):
-        theta = v[1]
-        cos_theta = np.cos(theta)
-        sin_theta = np.sin(theta)
-        R[0, 0] =  cos_theta
-        R[0, 1] = -sin_theta
-        R[1, 0] =  sin_theta
-        R[1, 1] =  cos_theta
+    cos_theta = np.cos(theta)
+    sin_theta = np.sin(theta)
+    R[0, 0] =  cos_theta
+    R[0, 1] = -sin_theta
+    R[1, 0] =  sin_theta
+    R[1, 1] =  cos_theta
+
     T = np.eye(3)
-    t = v[0]
-    tx = t*ab[0]
-    ty = t*ab[1]
     T[0, 2] = tx
     T[1, 2] = ty
     # return np.linalg.inv(C).dot(R).dot(T).dot(C)
@@ -128,11 +140,9 @@ def cost_function(v, *args):
         paper formula (1).
     """
     F, matches = args[0], args[1]
+    apply_rectification = args[2]
 
     v_copy = v.copy()
-    # Normalize
-    # if (len(v) > 2):
-    #     v_copy[2] /= 10
 
     # verify that parameters are in the bounding box
     # if (np.abs(v[2]) > 200*np.pi or
@@ -150,9 +160,19 @@ def cost_function(v, *args):
     # compute epipolar lines
     p1 = np.column_stack((matches[:,0:2],np.ones((len(matches),1))))
     Fx1 = np.transpose(np.dot(F, np.transpose(p1)))
+
+
     # Compute normal vector to epipolar liness
-    ab = np.array([Fx1[0][0], Fx1[0][1]])
-    ab = ab/np.linalg.norm(ab)
+    if (apply_rectification):
+        ab = np.array([Fx1[0][0], Fx1[0][1]])
+        ab = ab/np.linalg.norm(ab)
+        if len(v) > 2:
+            v_copy[1] /= 10
+
+    else:
+        ab = []
+        if len(v) > 3:
+            v_copy[2] /= 10
 
     # transform the coordinates of points in the second image according to
     # matrix A, built from vector v
@@ -178,15 +198,10 @@ def print_params(v):
     This function is called by the fmin_bfgs optimization function at each
     iteration, to display the current values of the parameters.
     """
-    if (len(v) == 1):
-        print('translation: (%.3e)' % (v[0]))
-    if (len(v) == 2):
-        print('rotation: %.3e, translation: (%.3e)' % (v[1], v[0]))
-    if (len(v) == 4):
-        print('rotation: %.3e, translation: (%.3e), center: (%.3e, %.3e)' % (v[1], v[0], v[2], v[3]))
+    print("v:", v)
 
-
-def local_transformation(r1, r2, x, y, w, h, m, pointing_error_correction_method=1):
+def local_transformation(r1, r2, x, y, w, h, m,
+                         pointing_error_correction_method='analytic', apply_rectification=True):
     """
     Estimates the optimal rotation following a translation to minimise the
     relative pointing error on a given tile.
@@ -209,13 +224,20 @@ def local_transformation(r1, r2, x, y, w, h, m, pointing_error_correction_method
     rpc_matches = rpc_utils.matches_from_rpc(r1, r2, x, y, w, h, n)
     F = estimation.affine_fundamental_matrix(rpc_matches)
 
+    args_opti = (F, m, apply_rectification)
+
     # Solve the resulting optimization problem
     from scipy.optimize import fmin_l_bfgs_b
-    v0 = np.zeros(pointing_error_correction_method)
+
+    number_variables = pointing_error_correction_method
+    if (not apply_rectification):
+        number_variables += 1
+
+    v0 = np.zeros(number_variables)
     v, min_val, debug = fmin_l_bfgs_b(
             cost_function,
             v0,
-            args=(F, m),
+            args=args_opti,
             approx_grad=True,
             factr=1,
             #bounds=[(-150, 150), (-100, 100), (-100, 100)])
@@ -224,28 +246,45 @@ def local_transformation(r1, r2, x, y, w, h, m, pointing_error_correction_method
             #iprint=0,
             #disp=0)
 
-    # Dnormalize
-    # if (len(v) > 2):
-    #     v[2] /= 10
 
     # compute epipolar lines
     p1 = np.column_stack((m[:,0:2],np.ones((len(m),1))))
-    Fp1 = np.dot(F, np.transpose(p1))
-    # Compute normal vector to epipolar liness
-    ab = np.array([Fp1[0][0], Fp1[0][1]])
-    ab = ab/np.linalg.norm(ab)
+    Fp1 = np.dot(F, np.transpose(p1)).T
 
-    # Compute translation
-    t = v[0]
-    tx = t*ab[0]
-    ty = t*ab[1]
+
+    if (apply_rectification):
+        # Compute normal vector to epipolar liness
+        ab = np.array([Fp1[0][0], Fp1[0][1]])
+        ab = ab/np.linalg.norm(ab)
+
+        # Compute translation
+        t = v[0]
+        tx = t*ab[0]
+        ty = t*ab[1]
+        # theta
+        if (pointing_error_correction_method > 1):
+            theta = v[1]
+            theta /= 10
+
+        else:
+            theta = 0
+    else:
+        ab = []
+        tx = v[0]
+        ty = v[1]
+        # theta
+        if (pointing_error_correction_method > 1):
+            theta = v[2]
+            theta /= 10
+        else:
+            theta = 0
+
     print('tx: %f' % tx)
     print('ty: %f' % ty)
-    if (len(v) == 2):
-        print('theta: %f' % v[1])
-    if (len(v) == 4):
-        print('cx: %f' % v[2])
-        print('cy: %f' % v[3])
+    print('theta: %f' % theta)
+    if (len(v) > 3):
+        print('cx: %f' % v[3])
+        print('cy: %f' % v[4])
     print('min cost: %f' % min_val)
     print(debug)
     A = rigid_transform_matrix(v, ab)
@@ -350,6 +389,86 @@ def local_translation_rotation(r1, r2, x, y, w, h, m):
                   [0, 0, 1]])
     return A, F
 
+def local_translation_rectified(r1, r2, x, y, w, h, m):
+    """
+    Estimates the optimal translation to minimise the relative pointing error
+    on a given tile.
+
+    Args:
+        r1, r2: two instances of the rpc_model.RPCModel class
+        x, y, w, h: region of interest in the reference image (r1)
+        m: Nx4 numpy array containing a list of matches, one per line. Each
+            match is given by (p1, p2, q1, q2) where (p1, p2) is a point of the
+            reference view and (q1, q2) is the corresponding point in the
+            secondary view.
+
+    Returns:
+        3x3 numpy array containing the homogeneous representation of the
+        optimal planar translation, to be applied to the secondary image in
+        order to correct the pointing error.
+    """
+    # estimate the affine fundamental matrix between the two views
+    n = cfg['n_gcp_per_axis']
+    rpc_matches = rpc_utils.matches_from_rpc(r1, r2, x, y, w, h, n)
+    F = estimation.affine_fundamental_matrix(rpc_matches)
+
+    # Apply rectification on image 1
+    S1p1 = common.points_apply_homography(S1, m[:,0:2])
+    S1p1 = np.column_stack((S1p1,np.ones((N,1))))
+    print("Points 1 rectied")
+    print(S1p1[:10])
+    # Apply rectification on image 2
+    S2p2 = common.points_apply_homography(S1, m[:,2:4])
+    S2p2 = np.column_stack((S2p2, np.ones((N,1))))
+    print("Points 2 rectied")
+    print(S2p2[:10])
+
+    # Compute F in the rectified space
+    rect_matches = np.column_stack((S1p1[:,0:2], S2p2[:, 0:2]))
+    F_rect2 = estimation.affine_fundamental_matrix(rect_matches)
+
+    # Compute epipolar lines
+    FS1p1 = np.dot(F_rect2, S1p1.T).T
+    print(FS1p1[:10])
+
+    # Normalize epipolar lines
+    c1 = -FS1p1[:, 1]
+    FS1p1_norm = FS1p1/c1[:, np.newaxis]
+    print(FS1p1_norm[:10])
+
+
+    b_ = np.abs(S2p2[:, 1] - S1p1[:, 1])
+    t_med = np.median(b_)
+    print(t_med)
+
+    t_med2 = np.sort(b_)[int(N/2)]
+    print("t_med2", t_med2)
+
+    # Compute epipolar lines witout recitifcation
+    p1 = np.column_stack((m[:,0:2],np.ones((N,1))))
+    Fp1 = np.dot(F, p1.T).T
+
+    # Compute normal vector to epipolar liness
+    ab = np.array([Fp1[0][0], Fp1[0][1]])
+    ab = ab/np.linalg.norm(ab)
+
+    tx = t_med*ab[0]
+    ty = t_med*ab[1]
+    print(tx, ty)
+
+    # Get translation in not rectified image
+    T = common.matrix_translation(0, -t_med)
+    T = np.linalg.inv(S2).dot(T).dot(S2)
+    # T = np.dot(S2_inv, T)
+    print(T)
+
+    # the correction to be applied to the second view is the opposite
+    A = np.array([[1, 0, -out_x],
+                  [0, 1, -out_y],
+                  [0, 0, 1]])
+    return A, F
+
+
 
 def error_vectors(m, F, ind='ref'):
     """
@@ -437,7 +556,8 @@ def local_translation(r1, r2, x, y, w, h, m):
     return A, F
 
 
-def compute_correction(img1, rpc1, img2, rpc2, x, y, w, h, pec_method='analytic', pec_degree=1):
+def compute_correction(img1, rpc1, img2, rpc2, x, y, w, h, pec_method='analytic',
+                       pec_degree=1, apply_rectification=True):
     """
     Computes pointing correction matrix for specific ROI
 
@@ -468,13 +588,16 @@ def compute_correction(img1, rpc1, img2, rpc2, x, y, w, h, pec_method='analytic'
     if m is not None:
         if (pec_method == 'analytic'):
             if (pec_degree == 1):
-                A, F = local_translation(r1, r2, x, y, w, h, m)
+                if (apply_rectification):
+                    A, F = local_translation_rectified(r1, r2, x, y, w, h, m)
+                else:
+                    A, F = local_translation(r1, r2, x, y, w, h, m)
             elif (pec_degree == 2):
                 A, F = local_translation_rotation(r1, r2, x, y, w, h, m)
             else:
                 raise ValueError("Analytic method for degree > 2 is not implemented")
         elif (pec_method == 'numeric'):
-            A, F = local_transformation(r1, r2, x, y, w, h, m, pec_degree)
+            A, F = local_transformation(r1, r2, x, y, w, h, m, pec_degree, apply_rectification)
         else:
             raise ValueError("Choose between analytic or numeric solver for correcting the pointing error")
 
