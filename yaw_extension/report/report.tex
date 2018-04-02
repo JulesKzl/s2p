@@ -38,18 +38,23 @@
  \end{center}
 
  \tableofcontents
-<<<<<<< HEAD
 
 \begin{abstract}
 
 \end{abstract}
 
 \section{Attitude of a Satellite}
-=======
->>>>>>> 1017f757d9d3789a9f65e90c6724c6722ef2159e
 
 
-\section{Satellite imagery}
+Roll, pitch and yaw angles. (See Figure \ref{angles}).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/angles.jpg}
+   \caption{ Roll, pitch and yaw angles.}
+   \label{angles}
+\end{figure}
+
 \subsection{Localization and projection functions}
 We define here the localization and projection functions  allow converting from image coordinates to coordinates
 on the globe and back (See Figure \ref{rpc}).
@@ -119,16 +124,7 @@ which can be approximated, using the affine fundamental matrix $F$, to:
 \dfrac{1}{N} \sum\limits_{i=1}^{N} d(\textbf{x}_i', F\textbf{x}_i)
 \end{align*}
 
-\subsection{Attitude of a Satellite}
-The attitude of a satellite refers to the orientation of a three-dimensional coordinate system linked to the satellite with respect to another coordinate system (Earth for example). 
-We define the roll, pitch and yaw angles as in Figure \ref{angles}.
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.5\textwidth]{figures/angles.jpg}
-   \caption{ Roll, pitch and yaw angles.}
-   \label{angles}
-\end{figure}
 
 
 \subsection{Sensibility}
@@ -307,7 +303,7 @@ To correct the pointing error in the rectified setting we find $R^*$ and $T^*$ m
 
 Since we are not able to solve this optimization problem analytically, we solve it numerically thanks to the L-BFGS algorithm. As input are the correspondences on the images and the affine approximation matrix and the optimization algorithm outputs the optimal angle $\theta \in [0, 2\pi]$ corresponding to the error on the yaw and a translation $t \in \mathbb{R}$ corresponding to a translation in the normal direction w.r.t. the epipolar lines.
 
-\paragraph{Limited-memory BFGS\\}
+\paragraph*{Limited-memory BFGS\\}
 Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton methods that approximates the BFGS algorithm using a limited amount of computer memory. In our case we do not need to compute the gradient analytically since the algorithm approximates it using finite difference. We use this algorithm as a black box to solve the minimization problem.
 
 \newpage
@@ -433,7 +429,7 @@ The structure of the provided Skysat-3 data are simpler: 892 panchromatic frames
 
 \subsubsection{Geolocalisation}
 
-The geolocalisation have been done using the rpc model, with a reprojection altitude depending of the area considered: for Skysat-2, near Cushing (United States), an altitude of $h=285~m$ (mean altitude of Cushing) has been used, while an altitude of $h=0m$ has been used for Skysat-3 video, in port Hedland (Australia). The three traces for Skysat-2 are shown in chronological order in figures~\ref{fig_trace_7Z}~\ref{fig_trace_8Z}~\ref{fig_trace_1Z}, while the trace for Skysat-3 only represents the 1t, 300th, and 600th images in the video.
+The geolocalisation have been done using the rpc model, with a reprojection altitude depending of the area considered: for Skysat-2, near Cushing (United States), an altitude of $h=285~m$ (mean altitude of Cushing) has been used, while an altitude of $h=0m$ has been used for Skysat-3 video, in port Hedland (Australia). The three traces for Skysat-2 are shown in chronological order in figures~\ref{fig_trace_7Z}~\ref{fig_trace_8Z}~\ref{fig_trace_1Z}, while the trace for Skysat-3 only represents the 1t, 300th, and 600th images in the video. All the geographic content are brought to us thanks to OpenStreeMap API~\cite{OpenStreetMap}.
 
 \begin{figure}[H]
     \centering
@@ -505,13 +501,8 @@ The geolocalisation have been done using the rpc model, with a reprojection alti
 Unfortunately, we did not test the analytical way of correcting the pointing error with translation and rotation due to the time constraint of the project and code issues.
 
  \subsubsection{Testdata (Pléiades)}
-<<<<<<< HEAD
- We first try our modified pipeline with improved pointing error correction on Pléiades images (see Figure \ref{fig:testdata}) from the \verb|s2p| Github repositroy. These images are located on the island of Reunion. We can see on Figure \ref{fig:testdata-location} that the errors of the RPC function of the two images.\\
-
-=======
  We first try our modified pipeline with improved pointing error correction on Pléiades images (see Figure \ref{fig:testdata}) from the \verb|s2p| Github repositroy. These images are located on the island of Reunion. We can observe on Figure \ref{fig:testdata-location} the error of the RPC function of the two images.\\
- 
->>>>>>> 46a263afec76b31ba245313efead5990c5aefb39
+
             \begin{figure}[H]
             \centering
             \begin{subfigure}[b]{0.5\linewidth}
@@ -552,19 +543,12 @@ Unfortunately, we did not test the analytical way of correcting the pointing err
             \caption{Results of pointing error correction on Pléiades images}
              \label{tab:testdata-res}
           \end{table}
-<<<<<<< HEAD
 
- \subsubsection{Vidéo SkySat}
 
-            \begin{figure}[ht]
-=======
-         
-            
  \subsubsection{Vidéo SkySat}
              We then try our modified pipeline with improved pointing error correction on two images from the Skysat videos (see Figure \ref{fig:video}) from Planet's data. The video were shot on an harbor in Australia. We can see on Figure \ref{fig:video-location} the error of the RPC function of all the images of the video.\\
-             
+
             \begin{figure}[H]
->>>>>>> 46a263afec76b31ba245313efead5990c5aefb39
             \centering
             \begin{subfigure}[b]{0.8\linewidth}
               \centering\includegraphics[width=\textwidth]{figures/video_1.jpeg}
@@ -576,17 +560,17 @@ Unfortunately, we did not test the analytical way of correcting the pointing err
            \caption{First and $100$-th images of a SkySat video.}
            \label{fig:video}
           \end{figure}
-         
-          
+
+
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.7\textwidth]{figures/geoloc_video.png}
     \caption{Geolocation of the SkySat video (Australia). }
     \label{fig:video-location}
 \end{figure}
-          
+
 Results from the different methods are compiled in Table \ref{tab:video-res}. The images were divided into $3$ tiles of $1000 \times 1000$ pixels.
-          
+
 \begin{table}[h]
 \centering
              \begin{tabular}{|r||c|c|c|}
@@ -602,15 +586,10 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
       (5) & 42.6& 29.1& 70.7\\
               \hline
             \end{tabular}
-<<<<<<< HEAD
-
-
-=======
                  \caption{Results of pointing error correction on images from the Skysat's video.}
              \label{tab:video-res}
-          \end{table}      
-            
->>>>>>> 46a263afec76b31ba245313efead5990c5aefb39
+          \end{table}
+
 \subsubsection{Triplet SkySat}
              We then try our modified pipeline with improved pointing error correction on two images from the Skysat triplets (see Figure \ref{fig:triplet}) from Planet's data. The images are taken in the USA. %We can see on Figure \ref{fig:video-location} the error of the RPC function of all the images of the video.\\
 
@@ -626,25 +605,19 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
  \caption{Two images from SkySat triplets.}
            \label{fig:triplet}
           \end{figure}
-<<<<<<< HEAD
 
-
-             \begin{tabular}{|c|c|c|}
-=======
-          
           \begin{figure}[H]
     \centering
     \includegraphics[width = 0.7\textwidth]{figures/8Z_trace.jpeg}
     \caption{Trace at a given time from the $3$ cameras of a SkySat satellite.}
     \label{fig:8Z_trace}
 \end{figure}
-        
-    Results from the different methods are compiled in Table \ref{tab:triplet-res}. The images were divided into $3$ tiles of $1000 \times 1000$ pixels.    
-        
+
+    Results from the different methods are compiled in Table \ref{tab:triplet-res}. The images were divided into $3$ tiles of $1000 \times 1000$ pixels.
+
         \begin{table}[h]
 \centering
              \begin{tabular}{|r||c|c|c|}
->>>>>>> 46a263afec76b31ba245313efead5990c5aefb39
               \hline
           methods &    tile 1 & tile 2 & tile 3 \\
               \hline
@@ -657,26 +630,69 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
       (5) &  75.6& 81.0& 43.7\\
               \hline
             \end{tabular}
-<<<<<<< HEAD
-
-     \subsubsection{Results}
-=======
                             \caption{Results of pointing error correction on images from the Skysat's triplets.}
              \label{tab:triplet-res}
-          \end{table}      
-            
+          \end{table}
+
      \subsubsection{Results analysis}
-     
+
 We can see that, for all the data, the numerical solutions for the translation are both very close to the analytic solution for the translation (median). For the correction with the rotation and translation, results are quite ambiguous. In fact, wheras the correction with two degree of freedom $(5)$ are always better than the one with only one $(4)$, the correction it-self is sometimes better than the translation only and sometimes a lot worse. For example, on the images from the videos, $(4)$ and $(5)$ are better on tile $1$ but worse on tile $3$.
->>>>>>> 46a263afec76b31ba245313efead5990c5aefb39
+
+\subsection{Matches between tiles}
+
+During our experiments, a critial step in correcting the pointing error is the match of keypoints between tiles. Given the time given, we weren't not able to investigate more generally the matching process in \verb|s2p|, but we focused on a representing example: the pair \verb$s03_20161003T161231Z_pan_d1_0002.tif$ and \verb$s03_20161003T161148Z_pan_d1_0002.tif$, which is shown in figure~\ref{fig_sift_input_pair}.
+
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.8\textwidth}
+        \centering
+        \includegraphics[width = 0.9\textwidth]{ROI_d1_2.png}
+        \caption{Input pair to correct. Top: 1Z trace; right: 8Z trace}
+    \end{subfigure}%
+    ~
+    \vfill
+    ~
+    \begin{subfigure}[t]{0.8\textwidth}
+        \centering
+        \includegraphics[width = 0.9\textwidth]{ROI_only_match.png}
+        \caption{Region of interest. Left: 1Z trace; right: 8Z trace}
+    \end{subfigure}%
+    \caption{Overview of the ROI of the input pair to correct}
+    \label{fig_sift_input_pair}
+\end{figure}
+
+On this ROI, three different kinds of keypoints were used. First, the native SIFT algorithm of \verb$s2p$ gives the matches presented in figure~\ref{fig_sift_s2p}, without geometric refinment. The keypoints found are completely false and seem to be influenced by boundaries conditions. The native pipeline find 0 match after refinment. Nonetheless, the SIFT algorithm of OpenCV~\cite{opencv_library} show 25 refined matches, presented in figure~\ref{fig_sift_cv} for the same ROI, given a Lowe's ratio of 0.5: meaning that a match is correct if the distance between the keypoints are at most half the distance between a keypoint and his second closest match. The results are still qualitatively bad. Finaly, the ASIFT algorithm of OpenCV~\cite{opencv_library}, adapted from the IPOL ASIFT algorithm~\cite{ipol_asift}, highlights 2256 refined matches, presented in figure~\ref{fig_asift_cv}. The refinment process used is RANSAC, with a quite large reprojection error of 5 pixels. This time the matches look promising.
+In fact, the good performance of the ASIFT algorithm can be expected given its invariance to camera axis orientation, which jeopardizes the SIFT results for Planet Data.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.9\textwidth]{sift_s2p_d1_2.jpeg}
+    \caption{25 matches found by SIFT on the ROI of interest, implementation from S2P. Without any refinment. Left: 1Z trace; right: 8Z trace}
+    \label{fig_sift_s2p}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.9\textwidth]{sift_cv_d1_2.jpeg}
+    \caption{25 refined (Lowe's ratio of $0.5$) matches found by SIFT on the ROI of interest, implementation from OpenCV~\cite{opencv_library}. Left: 1Z trace; right: 8Z trace}
+    \label{fig_sift_cv}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.9\textwidth]{asift_cv_d1_2.jpeg}
+    \caption{50 first of 2256 refined matches (RANSAC, reprojection error less than 5 pixels) found by ASIFT on the ROI of interest, implementation from OpenCV~\cite{opencv_library}. Left: 1Z trace; right: 8Z trace}
+    \label{fig_asift_cv}
+\end{figure}
 
 \section{Conclusion and future work}
 
 \subsection{Conclusion}
 We propose in this report different ways in order to correct the pointing error which is the consequence of incertitudes in the RPC functions. The pointing error correction is crucial in the \verb|s2p| pipeline as a preprocess for the rectification of the images before triangulation. The methods which were shown here do not seem to improve the performance of the pipeline on Planet's data.\\
-Through our tests using s2p, we remarked that the SIFT step were very important for all the next step of the pipeline. In fact without good corrrespondences or not enough, the pipeline were not able to rectify properly the images. 
+Through our tests using s2p, we remarked that the SIFT step were very important for all the next step of the pipeline. In fact without good corrrespondences or not enough, the pipeline were not able to rectify properly the images.
 \subsection{Future work}
-First more information about the error range of the satellite could be usefull in order to know in which range we have to correct the yaw rotation error. Another idea will be to use ASIFT in the pipeline to be sure that we have enough pipeline. Finally, the numeric optimizer seemed to have decent performance and we could use normalization or other degree of freedom to find better pointing error correction.
+First more information about the error range of the satellite could be usefull in order to know in which range we have to correct the yaw rotation error. Another idea will be to use ASIFT in the pipeline to be sure that we have enough matches to compute any distance between a point on the epipolar line associated with its match on the other image. Finally, the numeric optimizer seemed to have decent performance and we could use normalization or other degree of freedom to find better pointing error correction.
 
 
 \newpage
