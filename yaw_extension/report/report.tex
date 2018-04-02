@@ -471,7 +471,7 @@ The geolocalisation have been done using the rpc model, with a reprojection alti
 Unfortunately, we did not test the analytical way of correcting the pointing error with translation and rotation due to the time constraint of the project and code issues.
 
  \subsubsection{Testdata (Pléiades)}
- We first try our modified pipeline with improved pointing error correction on Pléiades images (see Figure \ref{fig:testdata}) from the \verb|s2p| Github repository. These images are located on the island of Reunion. We can observe on Figure \ref{fig_geoloc_testdata} the error of the RPC function of the two images.\\
+ We first try our modified pipeline with improved pointing error correction on Pléiades test data images (see Figure \ref{fig:testdata}) from the \verb|s2p| Github repository. These images are located on the island of Reunion.
 
             \begin{figure}[H]
             \centering
@@ -487,7 +487,7 @@ Unfortunately, we did not test the analytical way of correcting the pointing err
 
  Results from the different methods are compiled in Table \ref{tab:testdata-res}. The images were divided into $9$ tiles of $300 \times 300$ pixels.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
              \begin{tabular}{|r||c|c|c|c|c|c|c|c|c|}
               \hline
@@ -526,7 +526,7 @@ Unfortunately, we did not test the analytical way of correcting the pointing err
 
 Results from the different methods are compiled in Table \ref{tab:video-res}. The images were divided into $3$ tiles of $1000 \times 1000$ pixels.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
              \begin{tabular}{|r||c|c|c|}
               \hline
@@ -564,7 +564,7 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
 
     Results from the different methods are compiled in Table \ref{tab:triplet-res}. The images were divided into $3$ tiles of $1000 \times 1000$ pixels.
 
-        \begin{table}[h]
+        \begin{table}[H]
 \centering
              \begin{tabular}{|r||c|c|c|}
               \hline
@@ -638,10 +638,23 @@ In fact, the good performance of the ASIFT algorithm can be expected given its i
 \section{Conclusion and future work}
 
 \subsection{Conclusion}
-We propose in this report different ways in order to correct the pointing error which is the consequence of incertitudes in the RPC functions. The pointing error correction is crucial in the \verb|s2p| pipeline as a preprocess for the rectification of the images before triangulation. The methods which were shown here do not seem to improve the performance of the pipeline on Planet's data.\\
+We propose in this report different ways in order to correct the pointing error which is the consequence of incertitudes in the RPC functions. The pointing error correction is crucial in the \verb|s2p| pipeline as a preprocess for the rectification of the images before triangulation. The methods which were shown here do not seem to improve the performance of the pipeline on Planet's data.
+
 Through our tests using s2p, we remarked that the SIFT step were very important for all the next step of the pipeline. In fact without good corrrespondences or not enough, the pipeline were not able to rectify properly the images.
+
 \subsection{Future work}
-First more information about the error range of the satellite could be usefull in order to know in which range we have to correct the yaw rotation error. Another idea will be to use ASIFT in the pipeline to be sure that we have enough matches to compute any distance between a point on the epipolar line associated with its match on the other image. Finally, the numeric optimizer seemed to have decent performance and we could use normalization or other degree of freedom to find better pointing error correction.
+First more information about the error range of the satellite could be usefull in order to know in which range we have to correct the yaw rotation error; this information is not publicly available from Planet technical documentation.
+
+Secondly, a possible explanation for the poor results obtained given the increase in complexity could be the wrong modelling of the rotation. Given a center $C$ of a rotation R, one can model the search of any rotation (not only those which are centered on $(0,0)$) by:
+\begin{align*}
+    (R^*, T^*) = \argmin{R,T,C} \sum_{i=1}^N d(TT_CRT_C^{-1}\bm{x_i'}, F\bm{x}_i)^2
+\end{align*}
+where $T_C$ is the translation of vector $OC$.
+
+Another idea will be to use ASIFT in the pipeline to be sure that we have enough matches to compute any distance between a point on the epipolar line associated with its match on the other image. If the number of match is significant enough, then a pointing correction can be computed on a train set of matches and evaluated in the test set of matches in order to gain in robustness.
+
+Finally, the numeric optimizer seemed to have decent performance and we could use normalization or other degree of freedom to find better pointing error correction.
+
 
 
 \newpage
@@ -750,7 +763,7 @@ This happens when correcting the pointing error first with the translation
     \end{pmatrix}
 \end{align*}
 
-
+\newpage
 \bibliographystyle{plain}
 \bibliography{biblio}
 \end{document}
