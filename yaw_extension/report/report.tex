@@ -56,7 +56,7 @@ Roll, pitch and yaw angles. (See Figure \ref{angles}).
 \end{figure}
 
 \subsection{Localization and projection functions}
-Localization and projection functions  allow converting from image coordinates to coordinates
+We define here the localization and projection functions  allow converting from image coordinates to coordinates
 on the globe and back (See Figure \ref{rpc}).
 
 
@@ -142,7 +142,7 @@ a rotation of at most $D\varepsilon/2$ on the ground, where $D$ is the width of 
    \label{sensiblity}
 \end{figure}
 
-For SkySat satellites, we can have an error $\varepsilon \simeq 50 \; \mu \text{rad}$ with leads to an error of about $10$ degree knowing that $D \simeq 9 \text{km}$.
+For SkySat satellites, if we have an angle error of $\varepsilon \simeq 50 \; \mu \text{rad}$, this leads to an displament of about $0.2 \;\text{m}$  knowing that $D \simeq 9 \;\text{km}$, which corresponds to a distance of about $1$ pixel. 
 %500 km altitude orbit
 
 \section{Correction of Relative Pointing Error}
@@ -363,7 +363,7 @@ Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton m
 \subsection{Geolocalisation}
 
 \newpage
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width = 0.95\textwidth]{d1.png}
     \caption{Mosaic of d1. From left to right: 1Z, 7Z, 8Z}
@@ -371,7 +371,7 @@ Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton m
 \end{figure}
 
 \newpage
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width = 0.95\textwidth]{d2.png}
     \caption{Mosaic of d2. From left to right: 1Z, 7Z, 8Z}
@@ -379,14 +379,133 @@ Limited-memory BFGS is an optimization algorithm in the family of quasi-Newton m
 \end{figure}
 
 \newpage
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width = 0.95\textwidth]{d3.png}
     \caption{Mosaic of d3. From left to right: 1Z, 7Z, 8Z}
     \label{}
 \end{figure}
 
+\newpage
+\section{Experimental Results}
 
+ \subsection{Error evolution}
+ 
+ We experiment with different ways of correcting the pointing error. 
+ \begin{enumerate}
+ \item Translation: analytically without rectification
+ \item Translation: numerically with rectification (one degree of freedom for the translation)
+  \item Translation: numerically without rectification (two degrees of freedom for the translation)
+   \item Translation and rotation: numerically with rectification (one degree of freedom for the translation)
+    \item Translation and rotation: numerically without rectification (two degrees of freedom for the translation)
+ \end{enumerate}
+Unfortunately, we did not test the analytical way of correcting the pointing error with translation and rotation due to the time constraint of the project and code issues.  
+ 
+ \subsubsection{Testdata (Pléiades)}
+ We first try our modified pipeline with improved pointing error correction on Pléiades images (see Figure \ref{fig:testdata}) from the \verb|s2p| Github repositroy. These images are located on the island of Reunion. We can see on Figure \ref{fig:testdata-location} that the errors of the RPC function of the two images.\\
+ 
+            \begin{figure}[H]
+            \centering
+            \begin{subfigure}[b]{0.5\linewidth}
+              \centering\includegraphics[width=0.95\textwidth]{figures/testdata_1.jpeg}
+            \end{subfigure}%
+            \begin{subfigure}[b]{0.5\linewidth}
+              \centering\includegraphics[width=0.9\textwidth]{figures/testdata_2.jpeg}
+            \end{subfigure}
+            \caption{Pléiades images of the Réunion}
+             \label{fig:testdata}
+          \end{figure}
+          
+          
+        \begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{figures/geoloc_testdata.png}
+    \caption{Geolocation of Pléiades images (Réunion).}
+    \label{fig:testdata-location}
+\end{figure}
+          
+ Results from the different methods are compiled in Table \ref{tab:testdata-res}. The images were divided into $9$ tiles of $300 \times 300$ pixels.
+          
+\begin{table}[h]
+\centering
+             \begin{tabular}{|r||c|c|c|c|c|c|c|c|c|}
+              \hline
+           methods &   tile 1 & tile 2 & tile 3 & tile 4 & tile 5 & tile 6 & tile 7 & tile 8 & tile 9\\
+              \hline
+          no correction &   63.1& 239.5& 266.1& 130.9& 243.6& 165.1& 84.2& 152.7& 150.5 \\
+             \hline
+      (1) &  19.4& 48.2& 51.8& 45.0& 55.4& 28.2& 22.8& 37.6& 35.8\\
+       (2) & 19.4& 48.2& 51.8& 45.0& 55.4& 28.2& 22.8& 37.6& 35.8\\
+       (3) & 19.4& 48.2& 51.8& 45.0& 55.4& 28.2& 22.8& 37.6& 35.8\\
+      (4) & 19.9& 47.4& 55.3& 43.5& 54.6& 28.2& 27.8& 34.9& 42.3\\
+      (5)  & 19.4& 47.4& 55.3& 43.5& 54.6& 28.2& 27.8& 33.6& 42.3\\
+              \hline
+            \end{tabular}
+            \caption{Results of pointing error correction on Pléiades images}
+             \label{tab:testdata-res}
+          \end{table}
+            
+ \subsubsection{Vidéo SkySat}
+            
+            \begin{figure}[ht]
+            \centering
+            \begin{subfigure}[b]{0.8\linewidth}
+              \centering\includegraphics[width=0.6\textwidth]{figures/video_1.jpeg}
+            \end{subfigure}%
+            
+            \begin{subfigure}[b]{0.8\linewidth}
+              \centering\includegraphics[width=0.6\textwidth]{figures/video_100.jpeg}
+            \end{subfigure}
+          \end{figure}
+
+             \begin{tabular}{|c|c|c|}
+              \hline
+              tile 1 & tile 2 & tile 3 \\
+              \hline
+             50.4& 36.6& 91.8 \\
+             \hline
+       47.7& 32.8& 54.6\\
+       47.7& 32.8& 54.6\\
+       47.7& 32.8& 54.6\\
+       49.7& 29.1& 70.7\\
+       42.6& 29.1& 70.7\\
+              \hline
+            \end{tabular}
+            
+            
+\subsubsection{Triplet SkySat}
+
+            \begin{figure}[ht]
+            \centering
+            \begin{subfigure}[b]{0.6\linewidth}
+              \centering\includegraphics[width=0.9\textwidth]{figures/triplet_0.jpeg}
+            \end{subfigure}%
+            
+            \begin{subfigure}[b]{0.6\linewidth}
+              \centering\includegraphics[width=0.9\textwidth]{figures/triplet_1.jpeg}
+            \end{subfigure}
+          \end{figure}
+        
+
+             \begin{tabular}{|c|c|c|}
+              \hline
+              tile 1 & tile 2 & tile 3 \\
+              \hline
+             186.9& 82.0& 544.4 \\
+             \hline
+       110.4& 79.5& 63.8\\
+       110.4& 79.5& 63.8\\
+       110.4& 79.5& 63.8\\
+       97.4& 81.0& 43.7\\
+       75.6& 81.0& 43.7\\
+              \hline
+            \end{tabular}
+            
+     \subsubsection{Results}
+
+\section{Conclusion and future work}
+\subsection{Conclusion}
+\subsection{Future work}
 \appendix
 
 \section{Rotations and translation}
