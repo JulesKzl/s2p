@@ -361,7 +361,7 @@ Data provided are coming from Skysat-2 and Skysat-3 which are made of 3 camera e
 
 \subsubsection{Structure}
 
-The structure of the provided Skysat-2 data are represented in figure~\ref{fig_forest_skysat_2}. Each trace is identified with a catalog ID, for example s03\_20161003T161107Z, which uniquely identifies the trace for s03 (Skysat-3) timed at $16:11:07$ Zoulou the $03/10/2016$. For each trace, the panchromatic and the pansharp data are available; nonetheless, we only used the panchromatic ones. The 3 detectors of skysat are then identified with $d1$, $d2$ and $d3$, and images from each detector captured during the trace are stored as a trip of single frames, with a small horizontal and vertical overlap. With each tif image file comes the rpc model stored in ikonos convention. Each image is numbered between $1$ and $18$ for each detector, and the common POSIX time for a number for the three detectors is stored in the RPC file associated with the take. For the 3 detectors, the necessary time to capture the 18 images is approximately $9.2~s$.
+The structure of the provided Skysat-2 data are represented in figure~\ref{fig_forest_skysat_2}. Each trace is identified with a catalog ID, for example s03\_20161003T161107Z, which uniquely identifies the trace for s03 (Skysat-3) timed at $16:11:07$ Zoulou the $03/10/2016$. For each trace, the panchromatic and the pansharp data are available; nonetheless, we only used the panchromatic ones. The 3 detectors of skysat are then identified with $d1$, $d2$ and $d3$, and images from each detector captured during the trace are stored as a trip of single frames, with a small horizontal and vertical overlap. With each tif image file comes the rpc model stored in ikonos convention. Each image is numbered between $1$ and $18$ for each detector, and the common POSIX time for a number for the three detectors is stored in the RPC file associated with the take. For the 3 detectors, the necessary time to capture the 18 images is approximately $9.2~s$. The mosaic of data is available in appendix~\ref{appen_mosaic}.
 
 The structure of the provided Skysat-3 data are simpler: 892 panchromatic frames were collected from $02:05:54$ Zoulou to $02:06:23$ Zoulou the $07/05/2015$.
 
@@ -454,34 +454,6 @@ The geolocalisation have been done using the rpc model, with a reprojection alti
     \caption{Geolocalisation of trace s02\_20150507T020554Z in Port Hedland (Australia). Reprojected using an elevation of $h=285~m$}
     \label{fig_trace_video}
 \end{figure}
-
- \newpage
-\subsection{Mosaic of data}
-
-Finally, a mosaic of data gathering the tree traces  \verb$s03_20161003T161107Z$ , \verb$s03_20161003T161148Z$ and \verb$s03_20161003T161231Z$, respectively refered as 7Z, 8Z, and 1Z are represented for detector 1 (d1) in figure~\ref{fig_mosaic_d1}, for detector 2 (d2) in figure~\ref{fig_mosaic_d2} and for detector 3 in figure~\ref{fig_mosaic_d3}. An important part, which we try to tackle, was to automatically identify pairs and triplets with large overlapping area. This treatment is part of the Planet Post-processing pipeline for Skysat Data~\cite{planet_product} and has not been fully completed, even if a draft in the \verb$geolocalisation$ notebook is available.
-
- \begin{figure}[H]
-     \centering
-     \includegraphics[width = 0.95\textwidth]{d1.png}
-     \caption{Mosaic of d1. From left to right: 1Z, 8Z, 7Z}
-     \label{fig_mosaic_d1}
- \end{figure}
-
- \newpage
- \begin{figure}[H]
-     \centering
-     \includegraphics[width = 0.95\textwidth]{d2.png}
-     \caption{Mosaic of d2. From left to right: 1Z, 8Z, 7Z}
-     \label{fig_mosaic_d2}
- \end{figure}
-
- \newpage
- \begin{figure}[H]
-     \centering
-     \includegraphics[width = 0.95\textwidth]{d3.png}
-     \caption{Mosaic of d3. From left to right: 1Z, 8Z, 7Z}
-     \label{fig_mosaic_d3}
- \end{figure}
 
 \newpage
 \section{Experimental Results}
@@ -675,6 +647,36 @@ First more information about the error range of the satellite could be usefull i
 \newpage
 
 \appendix
+
+\newpage
+\section{Mosaic of data}
+\label{appen_mosaic}
+
+A mosaic of data gathering the tree traces \verb$s03_20161003T161107Z$, \verb$s03_20161003T161148Z$ and \verb$s03_20161003T161231Z$, respectively refered as 7Z, 8Z, and 1Z are represented for detector 1 (d1) in figure~\ref{fig_mosaic_d1}, for detector 2 (d2) in figure~\ref{fig_mosaic_d2} and for detector 3 in figure~\ref{fig_mosaic_d3}. An important part, which we try to tackle, was to automatically identify pairs and triplets with large overlapping area. This treatment is part of the Planet Post-processing pipeline for Skysat Data~\cite{planet_product} and has not been fully completed, even if a draft in the \verb$geolocalisation$ notebook is available.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.95\textwidth]{d1.png}
+    \caption{Mosaic of d1. From left to right: 1Z, 8Z, 7Z}
+    \label{fig_mosaic_d1}
+\end{figure}
+
+\newpage
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.95\textwidth]{d2.png}
+    \caption{Mosaic of d2. From left to right: 1Z, 8Z, 7Z}
+    \label{fig_mosaic_d2}
+\end{figure}
+
+\newpage
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.95\textwidth]{d3.png}
+    \caption{Mosaic of d3. From left to right: 1Z, 8Z, 7Z}
+    \label{fig_mosaic_d3}
+\end{figure}
+
 
 \section{Rotations and translation}
 
