@@ -38,15 +38,6 @@
  \end{center}
 
  \tableofcontents
-<<<<<<< HEAD
-
-\begin{abstract}
-
-\end{abstract}
-
-\section{Attitude of a Satellite}
-=======
->>>>>>> 1017f757d9d3789a9f65e90c6724c6722ef2159e
 
 
 \section{Satellite imagery}
@@ -505,13 +496,8 @@ The geolocalisation have been done using the rpc model, with a reprojection alti
 Unfortunately, we did not test the analytical way of correcting the pointing error with translation and rotation due to the time constraint of the project and code issues.
 
  \subsubsection{Testdata (Pléiades)}
-<<<<<<< HEAD
- We first try our modified pipeline with improved pointing error correction on Pléiades images (see Figure \ref{fig:testdata}) from the \verb|s2p| Github repositroy. These images are located on the island of Reunion. We can see on Figure \ref{fig:testdata-location} that the errors of the RPC function of the two images.\\
-
-=======
  We first try our modified pipeline with improved pointing error correction on Pléiades images (see Figure \ref{fig:testdata}) from the \verb|s2p| Github repositroy. These images are located on the island of Reunion. We can observe on Figure \ref{fig:testdata-location} the error of the RPC function of the two images.\\
  
->>>>>>> 46a263afec76b31ba245313efead5990c5aefb39
             \begin{figure}[H]
             \centering
             \begin{subfigure}[b]{0.5\linewidth}
@@ -552,19 +538,12 @@ Unfortunately, we did not test the analytical way of correcting the pointing err
             \caption{Results of pointing error correction on Pléiades images}
              \label{tab:testdata-res}
           \end{table}
-<<<<<<< HEAD
-
- \subsubsection{Vidéo SkySat}
-
-            \begin{figure}[ht]
-=======
          
             
  \subsubsection{Vidéo SkySat}
              We then try our modified pipeline with improved pointing error correction on two images from the Skysat videos (see Figure \ref{fig:video}) from Planet's data. The video were shot on an harbor in Australia. We can see on Figure \ref{fig:video-location} the error of the RPC function of all the images of the video.\\
              
             \begin{figure}[H]
->>>>>>> 46a263afec76b31ba245313efead5990c5aefb39
             \centering
             \begin{subfigure}[b]{0.8\linewidth}
               \centering\includegraphics[width=\textwidth]{figures/video_1.jpeg}
@@ -602,15 +581,10 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
       (5) & 42.6& 29.1& 70.7\\
               \hline
             \end{tabular}
-<<<<<<< HEAD
-
-
-=======
                  \caption{Results of pointing error correction on images from the Skysat's video.}
              \label{tab:video-res}
           \end{table}      
             
->>>>>>> 46a263afec76b31ba245313efead5990c5aefb39
 \subsubsection{Triplet SkySat}
              We then try our modified pipeline with improved pointing error correction on two images from the Skysat triplets (see Figure \ref{fig:triplet}) from Planet's data. The images are taken in the USA. %We can see on Figure \ref{fig:video-location} the error of the RPC function of all the images of the video.\\
 
@@ -626,11 +600,6 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
  \caption{Two images from SkySat triplets.}
            \label{fig:triplet}
           \end{figure}
-<<<<<<< HEAD
-
-
-             \begin{tabular}{|c|c|c|}
-=======
           
           \begin{figure}[H]
     \centering
@@ -644,7 +613,6 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
         \begin{table}[h]
 \centering
              \begin{tabular}{|r||c|c|c|}
->>>>>>> 46a263afec76b31ba245313efead5990c5aefb39
               \hline
           methods &    tile 1 & tile 2 & tile 3 \\
               \hline
@@ -657,10 +625,6 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
       (5) &  75.6& 81.0& 43.7\\
               \hline
             \end{tabular}
-<<<<<<< HEAD
-
-     \subsubsection{Results}
-=======
                             \caption{Results of pointing error correction on images from the Skysat's triplets.}
              \label{tab:triplet-res}
           \end{table}      
@@ -668,7 +632,6 @@ Results from the different methods are compiled in Table \ref{tab:video-res}. Th
      \subsubsection{Results analysis}
      
 We can see that, for all the data, the numerical solutions for the translation are both very close to the analytic solution for the translation (median). For the correction with the rotation and translation, results are quite ambiguous. In fact, wheras the correction with two degree of freedom $(5)$ are always better than the one with only one $(4)$, the correction it-self is sometimes better than the translation only and sometimes a lot worse. For example, on the images from the videos, $(4)$ and $(5)$ are better on tile $1$ but worse on tile $3$.
->>>>>>> 46a263afec76b31ba245313efead5990c5aefb39
 
 \section{Conclusion and future work}
 
