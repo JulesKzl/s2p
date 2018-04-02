@@ -274,13 +274,17 @@ S2P pipeline comes with a pair and a triplet of test data captured by Pleiades. 
 
 \subsection{Planet Data}
 
-Data provided are coming from Skysat-2 and Skysat-3 which are made of 3 camera each, with a revisit time of $3$ to $4$ day at $500~km$ altitude~\cite{planet_product}. The resolution of the panchromatic images is $0.9~m$, and academics can apply to their Education and Research program to download up to $10000~km^2/month$ of those data.
+Data provided are coming from Skysat-2 and Skysat-3 which are made of 3 camera each, with a revisit time of $3$ to $4$ day at $500~km$ altitude~\cite{planet_product}. The agility of Skysat satellite is 2.3 target (6.6 x 10 km) per minute. The resolution of the panchromatic images is $0.9~m$, and academics can apply to their Education and Research program to download up to $10000~km^2/month$ of those data.
 
 \subsubsection{Structure}
 
-The structure of the provided Skysat-2 data are represented in figure~\ref{fig_forest_skysat_2}. Each trace is trace is identified with a catalog ID, for example s03\_20161003T161107Z, which uniquely identifies the trace for s03 (Skysat-3) timed at $16:11:07$ the $03/10/2016$. The 3 detectors of skysat are then identified with $d1$, $d2$ and $d3$.
+The structure of the provided Skysat-2 data are represented in figure~\ref{fig_forest_skysat_2}. Each trace is identified with a catalog ID, for example s03\_20161003T161107Z, which uniquely identifies the trace for s03 (Skysat-3) timed at $16:11:07$ Zoulou the $03/10/2016$. For each trace, the panchromatic and the pansharp data are available; nonetheless, we only used the panchromatic ones. The 3 detectors of skysat are then identified with $d1$, $d2$ and $d3$, and images from each detector captured during the trace are stored as a trip of single frames, with a small horizontal and vertical overlap. With each tif image file comes the rpc model stored in ikonos convention. Each image is numbered between $1$ and $18$ for each detector, and the common POSIX time for a number for the three detectors is stored in the RPC file associated with the take. For 18 images, for the 3 detectors, the necessary time is approximately $9.2~s$.
+
+The structure of the provided Skysat-3 data are simpler: 892 panchromatic frames were collected from $02:05:54$ Zoulou to $02:06:23$ Zoulou the $07/05/2015$
 
 \begin{figure}
+    \centering
+    \resizebox{!}{.7\textheight}{
     \begin{forest}
       my label/.style={
         label={[font=\sffamily]right:{#1}},
@@ -328,12 +332,50 @@ The structure of the provided Skysat-2 data are represented in figure~\ref{fig_f
           ]
         ]
       ]
-    \end{forest}
+  \end{forest}
+  }
+
     \caption{Structure of the provided Skysat-2 data}
     \label{fig_forest_skysat_2}
 \end{figure}
 
 \subsubsection{Geolocalisation}
+
+The geolocalisation have been done using the rpc model, with a reprojection altitude depending of the area considered: for Skysat-2, near Cushing (United States), an altitude of $h=285~m$ (mean altitude of Cushing) has been used, while an altitude of $h=0m$ has been used for Skysat-3 video, in port Hedland (Australia). The three traces for Skysat-2 are shown in chronological order in figure~\ref{fig_trace_7Z}~\ref{fig_trace_8Z}~\ref{fig_trace_1Z}, while the trace for Skysat-3 only represents the 1t, 300th, and 600th images in the video.
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[height = 0.8\textheight]{trace_7Z.png}
+    \caption{Trace s03\_20161003T161107Z}
+    \label{fig_trace_7Z}
+\end{figure}
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[height = 0.8\textheight]{trace_8Z.png}
+    \caption{Trace s03\_20161003T161148Z}
+    \label{fig_trace_8Z}
+\end{figure}
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[height = 0.8\textheight]{trace_1Z.png}
+    \caption{Trace s03\_20161003T161231Z}
+    \label{fig_trace_1Z}
+\end{figure}
+
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[height = 0.8\textheight]{trace_video.png}
+    \caption{Trace s02\_20150507T020554Z}
+    \label{fig_trace_video}
+\end{figure}
+
+\subsection{Mosaic of data}
 
 \newpage
 \begin{figure}
