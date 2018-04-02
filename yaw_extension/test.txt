@@ -1,0 +1,166 @@
+WARNING: out_dir is a relative path. It is interpreted with respect to yaw_extension/config.json location (not cwd)
+out_dir is: /Users/juleskozolinsky/Projets/s2p/yaw_extension/./output
+WARNING: ignoring unknown parameter pointing_error_correction_method.
+WARNING: ignoring unknown parameter pointing_error_correction_degree.
+WARNING: ignoring unknown parameter apply_rectification.
+tile size: 342 342
+total number of tiles: 9 (3 x 3)
+
+discarding masked tiles...
+done 1 / 9 tilesdone 2 / 9 tilesdone 3 / 9 tilesdone 4 / 9 tilesdone 5 / 9 tilesdone 6 / 9 tilesdone 7 / 9 tilesdone 8 / 9 tilesdone 9 / 9 tiles
+Elapsed time: 0:00:00.126451
+
+correcting pointing locally...
+361 matches
+WARNING: ignoring parameter minliers=7
+pmean = 168.286 157.149 177.011 166.992
+pdev = 76.0769 77.0431 76.0446 77.9927
+normalization factor = 76.7893
+running RANSAC over 361 datapoints of dimension 4
+will try to find a model of size 9 from 7 points
+we will make 1000 trials and keep the best with e<0.00390679
+a model must have more than 8 inliers
+RANSAC found this best model: -0.00031326 -0.02678 0.687623 0.0272848 9.51644e-05 0.162865 -0.687749 -0.161832 -0.000147805
+RANSAC found a model with 215 inliers
+parameters = -5.31255e-08 -4.54159e-06 0.00972248 4.62721e-06 1.61389e-08 0.00129917 -0.00967453 -0.00134574 0.0968268
+Input file size is 1024, 1024
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 157 381
+Warning 1: -srcwin -249 -124 627 1699 falls partially outside raster extent. Going on however.
+Input file size is 1031, 1102
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 0 334
+done 1 / 9 tiles600 matches
+WARNING: ignoring parameter minliers=7
+pmean = 509.513 168.829 517.663 182.71
+pdev = 61.4995 83.5238 60.8962 82.3437
+normalization factor = 72.0658
+running RANSAC over 600 datapoints of dimension 4
+will try to find a model of size 9 from 7 points
+we will make 1000 trials and keep the best with e<0.00416286
+a model must have more than 8 inliers
+RANSAC found this best model: 0.000613018 -0.0128674 -0.689083 0.0134808 9.12934e-05 -0.156356 0.690014 0.155727 7.23328e-05
+RANSAC found a model with 364 inliers
+parameters = 1.18036e-07 -2.47761e-06 -0.00917028 2.59571e-06 1.75785e-08 -0.00351655 0.0090764 0.00342031 -0.0851903
+Input file size is 1024, 1024
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 114 462
+Warning 1: -srcwin 92 -117 627 1699 falls partially outside raster extent. Going on however.
+Input file size is 1031, 1102
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 0 368
+done 2 / 9 tiles387 matches
+WARNING: ignoring parameter minliers=7
+pmean = 822.887 141.093 821.427 200.771
+pdev = 75.1902 82.3566 74.0692 83.5369
+normalization factor = 78.7882
+running RANSAC over 387 datapoints of dimension 4
+will try to find a model of size 9 from 7 points
+we will make 1000 trials and keep the best with e<0.00380768
+a model must have more than 8 inliers
+RANSAC found this best model: -0.00177899 0.00509833 0.690922 -0.00609234 -0.000131633 0.156567 -0.688334 -0.15568 0.00274565
+RANSAC found a model with 209 inliers
+parameters = -2.86584e-07 8.21307e-07 0.00883987 -9.81436e-07 -2.12052e-08 0.00279762 -0.00836221 -0.00264878 -0.0930839
+Input file size is 1024, 1024
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 134 462
+Warning 1: -srcwin 433 -111 625 1699 falls partially outside raster extent. Going on however.
+Input file size is 1031, 1102
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 0 396
+done 3 / 9 tiles379 matches
+WARNING: ignoring parameter minliers=7
+pmean = 186.389 540.777 194.833 554.296
+pdev = 90.7832 85.1986 90.8335 86.897
+normalization factor = 88.4281
+running RANSAC over 379 datapoints of dimension 4
+will try to find a model of size 9 from 7 points
+we will make 1000 trials and keep the best with e<0.00339259
+a model must have more than 8 inliers
+RANSAC found this best model: -0.000659293 0.0717347 -0.675345 -0.0727478 -3.65014e-05 -0.198218 0.675061 0.196144 0.000872285
+RANSAC found a model with 197 inliers
+parameters = -8.43137e-08 9.1738e-06 -0.0127058 -9.30336e-06 -4.66798e-09 -0.000426389 0.0126808 0.000510742 -0.117172
+Input file size is 1024, 1024
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 116 378
+Warning 1: -srcwin -248 220 627 1699 falls partially outside raster extent. Going on however.
+Input file size is 1031, 1102
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 0 331
+done 4 / 9 tiles390 matches
+WARNING: ignoring parameter minliers=7
+pmean = 530.751 553.253 535.021 587.901
+pdev = 72.6258 74.3751 71.1547 81.5623
+normalization factor = 74.9295
+running RANSAC over 390 datapoints of dimension 4
+will try to find a model of size 9 from 7 points
+we will make 1000 trials and keep the best with e<0.00400376
+a model must have more than 8 inliers
+RANSAC found this best model: 0.00194965 -0.0170017 -0.692488 0.0198517 0.000515842 -0.140716 0.692806 0.141393 -0.000140547
+RANSAC found a model with 224 inliers
+parameters = 3.47257e-07 -3.02821e-06 -0.00764736 3.53584e-06 9.18779e-08 -0.00382374 0.00710559 0.0034434 0.117961
+Input file size is 1024, 1024
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 122 443
+Warning 1: -srcwin 92 227 627 1699 falls partially outside raster extent. Going on however.
+Input file size is 1031, 1102
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 0 363
+done 5 / 9 tiles221 matches
+WARNING: ignoring parameter minliers=7
+pmean = 823.384 490.27 822.582 549.273
+pdev = 83.4527 81.9161 82.2779 84.1434
+normalization factor = 82.9475
+running RANSAC over 221 datapoints of dimension 4
+will try to find a model of size 9 from 7 points
+we will make 1000 trials and keep the best with e<0.00361674
+a model must have more than 8 inliers
+RANSAC found this best model: 0.00259813 -0.0432386 0.680737 0.0446163 0.00018843 0.196563 -0.675295 -0.195116 0.000194426
+RANSAC found a model with 110 inliers
+parameters = 3.7762e-07 -6.28441e-06 0.0113481 6.48465e-06 2.73869e-08 -0.00297948 -0.0116314 0.00280877 0.105999
+Input file size is 1024, 1024
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 186 544
+Warning 1: -srcwin 433 233 625 1699 falls partially outside raster extent. Going on however.
+Input file size is 1031, 1102
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 0 393
+done 6 / 9 tiles590 matches
+WARNING: ignoring parameter minliers=7
+pmean = 183.983 846.601 191.521 866.721
+pdev = 73.4259 83.6644 72.6074 87.0722
+normalization factor = 79.1925
+running RANSAC over 590 datapoints of dimension 4
+will try to find a model of size 9 from 7 points
+we will make 1000 trials and keep the best with e<0.00378824
+a model must have more than 8 inliers
+RANSAC found this best model: 5.88422e-05 -0.00595494 0.690772 0.0072192 0.000265166 0.153409 -0.690001 -0.152016 -0.000712265
+RANSAC found a model with 363 inliers
+parameters = 9.38256e-09 -9.49533e-07 0.00954389 1.15112e-06 4.22815e-08 0.00168006 -0.00968924 -0.00178068 0.153489
+Input file size is 1024, 1024
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 117 429
+Warning 1: -srcwin -248 564 627 1697 falls partially outside raster extent. Going on however.
+Input file size is 1031, 1102
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 0 327
+done 7 / 9 tiles512 matches
+WARNING: ignoring parameter minliers=7
+pmean = 465.09 829.2 465.207 885.035
+pdev = 66.5034 78.3319 65.6516 82.7602
+normalization factor = 73.3118
+running RANSAC over 512 datapoints of dimension 4
+will try to find a model of size 9 from 7 points
+we will make 1000 trials and keep the best with e<0.00409211
+a model must have more than 8 inliers
+RANSAC found this best model: 0.00247231 -0.0198527 0.694231 0.0220833 0.000358925 0.124976 -0.696786 -0.126569 -0.0025308
+RANSAC found a model with 324 inliers
+parameters = 4.59998e-07 -3.69378e-06 0.0125247 4.10881e-06 6.67816e-08 -0.000265834 -0.0131254 -6.38892e-05 0.342284
+Input file size is 1024, 1024
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 123 394
+Warning 1: -srcwin 93 571 627 1697 falls partially outside raster extent. Going on however.
+Input file size is 1031, 1102
+0...10...20...30...40...50...60...70...80...90...100 - done.
+qauto: rminmax = 0 350
+done 8 / 9 tiles212 matches
